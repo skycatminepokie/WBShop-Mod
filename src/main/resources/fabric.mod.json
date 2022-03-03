@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "wbshop",
+  "version": "${version}",
+  "name": "Wbshop",
+  "description": "The offical WBSMP mod for easy donations and more!",
+  "authors": [
+    "skycatminepokie"
+  ],
+  "contact": {
+    "website": "https://github.com/skycatminepokie",
+    "repo": "https://github.com/skycatminepokie/WBShop-Mod"
+  },
+  "license": "MIT",
+  "icon": "assets/wbshop/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "skycat.wbshop.WBShop"
+    ],
+    "server": [
+      "skycat.wbshop.server.WBShopServer"
+    ]
+  },
+  "mixins": [
+    "wbshop.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.18.1"
+  }
+}
