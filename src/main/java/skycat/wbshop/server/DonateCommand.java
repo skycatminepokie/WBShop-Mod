@@ -18,21 +18,17 @@ import java.util.OptionalInt;
 
 @Environment(EnvType.SERVER)
 public class DonateCommand implements Command<ServerCommandSource> {
-    DonateScreenHandler screenHandler;
-
-    private ScreenHandler createScreenHandler(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        screenHandler = DonateScreenHandler.newDonateScreenHandler(i, playerInventory, playerEntity);
-        return screenHandler;
-    }
 
     @Override
     public int run(CommandContext context) throws CommandSyntaxException {
         if (context.getSource() instanceof ServerCommandSource) {
-            SimpleNamedScreenHandlerFactory donateGuiFactory = new SimpleNamedScreenHandlerFactory(
-                    this::createScreenHandler, // We need to be able to access the result of createGeneric9x6 outside this
+            ((ServerCommandSource) context.getSource()).getPlayer().openHandledScreen(
+                new SimpleNamedScreenHandlerFactory(
+                    (syncId, inv, player) -> GenericContainerScreenHandler.createGeneric9x6(syncId, inv, player.getInventory()), // We need to be able to access the result of createGeneric9x6 outside this
                     Text.of("GUINAME")
+                )
             );
-            ((ServerCommandSource) context.getSource()).getPlayer().openHandledScreen(donateGuiFactory);
+
         } else {
             System.out.println("Warning: donate was (somehow) called from a non-ServerCommandSource, ignoring it.");
         }
