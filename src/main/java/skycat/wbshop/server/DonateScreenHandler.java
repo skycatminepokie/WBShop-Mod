@@ -1,13 +1,14 @@
 package skycat.wbshop.server;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import org.jetbrains.annotations.Nullable;
 
+@Environment(EnvType.SERVER)
 public class DonateScreenHandler extends GenericContainerScreenHandler {
 
 
@@ -22,7 +23,7 @@ public class DonateScreenHandler extends GenericContainerScreenHandler {
 
     @Override
     public void close(PlayerEntity player) {
-        DonationManager.donateScreenClosing(this);
+        DonationManager.donateScreenClosing(this, player);
         super.close(player);
     }
 }
