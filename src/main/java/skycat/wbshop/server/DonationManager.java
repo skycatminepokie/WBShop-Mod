@@ -56,13 +56,15 @@ public class DonationManager {
     }
 
     public static void makeDonation(List<ItemStack> itemStacks, PlayerEntity player) {
-        itemStacks.iterator().forEachRemaining(itemStack -> getPointValue(itemStack));
+        itemStacks.iterator().forEachRemaining(itemStack -> {
+            EconomyManager.getInstance().addBalance(player.getUuid(), getPointValue(itemStack));
+        });
     }
 
     public static int getPointValue(ItemStack itemStack) {
         // DEBUG:
-        System.out.println(itemStack.getCount() + "x " + itemStack.getItem().toString());
-        return itemStack.getCount() * pointValues.get(itemStack.getItem());
+        // System.out.println(itemStack.getCount() + "x " + itemStack.getItem().toString());
+        return itemStack.getCount(); // For now, every item will be worth exactly 1 point.
     }
 
     public static void initializePointValues() {

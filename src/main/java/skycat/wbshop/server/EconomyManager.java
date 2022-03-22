@@ -54,7 +54,8 @@ public class EconomyManager {
      */
     public int addBalance(UUID uuid, int amount) {
         if (!isValidEntry(uuid)) {
-            throw new IllegalArgumentException("uuid does not have a valid entry");
+            System.out.println("Warning: uuid was not valid in addBalance. Initializing an empty wallet.");
+            wallets.put(uuid, 0);
         }
         wallets.put(uuid, wallets.get(uuid) + amount);
         return wallets.get(uuid);
@@ -127,16 +128,22 @@ public class EconomyManager {
     }
 
     /**
-     * Makes a new EconomyManager. This is to be used ONLY in initialization. TODO: Find a better way to do this
+     * Makes a new EconomyManager. This is to be used ONLY in initialization. TODO: Find a better way to do this. Potentially move to main mod class?
      * @return The new EconomyManager
      */
     public static EconomyManager makeNewManager() {
+        EconomyManager manager = null;
         try {
-            return loadFromFile();
+            manager = loadFromFile();
         } catch (FileNotFoundException e) {
-            System.out.println("Could not find file to load player wallets from, initializing an empty one.");
-            return new EconomyManager();
+            System.out.println("Could not find file to load player wallets from.");
         }
+        if (manager == null) {
+            System.out.println("Initializing a new player wallet save file.");
+            manager = new EconomyManager();
+            manager.wallets = new HashMap<>();
+        }
+        return manager;
     }
 
 }

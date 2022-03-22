@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
@@ -21,8 +22,8 @@ import java.io.FileNotFoundException;
 @Environment(EnvType.SERVER)
 public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
 
-    public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager();
     public static final Gson GSON = new Gson();
+    public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
     // public static final Logger LOGGER = LoggerFactory.getLogger("wbshop"); // Need to fix this
 
     private static int donateCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -52,12 +53,17 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
             dispatcher.register(CommandManager.literal("donate").executes(WBShopServer::donateCalled));
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(CommandManager.literal("pay").executes(WBShopServer::payCalled))); // Looking to standardize this method reference
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(CommandManager.literal("bal").executes(WBShopServer::balCalled)));
     }
-
-
 
     private static int payCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         System.out.println(context.getSource().getPlayer().getUuid());
+        return 0;
+    }
+
+    private static int balCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        PlayerEntity thePlayer = context.getSource().getPlayer();
+        thePlayer.sendMessage(Text.of("You have " + ECONOMY_MANAGER.getBalance(thePlayer.getUuid()) + " points."),false);
         return 0;
     }
 
