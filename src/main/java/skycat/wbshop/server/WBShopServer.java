@@ -1,6 +1,7 @@
 package skycat.wbshop.server;
 
 import com.google.gson.Gson;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -18,6 +19,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import java.io.FileNotFoundException;
+
+import static net.minecraft.server.command.CommandManager.*;
 
 @Environment(EnvType.SERVER)
 public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
@@ -50,10 +53,26 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         DonationManager.initializePointValues();
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             // Props to u/profbj on reddit
-            dispatcher.register(CommandManager.literal("donate").executes(WBShopServer::donateCalled));
+            dispatcher.register(literal("donate").executes(WBShopServer::donateCalled));
         });
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(CommandManager.literal("pay").executes(WBShopServer::payCalled))); // Looking to standardize this method reference
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(CommandManager.literal("bal").executes(WBShopServer::balCalled)));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(literal("pay").executes(WBShopServer::payCalled))); // Looking to standardize this method reference
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(literal("bal").executes(WBShopServer::balCalled)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> dispatcher.register(literal("vote")
+                .then(argument("policy", IntegerArgumentType.integer(0))
+                        .then(argument("amount", IntegerArgumentType.integer(1))
+                                .executes(WBShopServer::voteCalledWithArgs)))
+                .executes(context -> {
+                    // TODO: Better explanation
+                    context.getSource().getPlayer().sendMessage(Text.of("Use this command to vote for policies."), false);
+                    return 0;
+                })
+        )));
+    }
+
+    private static int voteCalledWithArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        // TODO: Finish this
+        System.out.println("This is the part where " + context.getSource().getPlayer().getName().asString() + " votes for policy #" + IntegerArgumentType.getInteger(context, "policy") + " with " + IntegerArgumentType.getInteger(context, "amount") + " points."); // I'm not sure about whether "policy" has to be the same object as when we used it to register
+        return 0;
     }
 
     private static int payCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
