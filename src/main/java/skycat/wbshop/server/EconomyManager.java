@@ -96,10 +96,7 @@ public class EconomyManager {
         if (!wallets.containsKey(key)) { // Separated into different cases for easy modification later
             return false; // UUID key is not found
         }
-        if (wallets.get(key) == null) {
-            return false; // The value should not be null.
-        }
-        return true;
+        return wallets.get(key) != null; // The value should not be null.
     }
 
     /**

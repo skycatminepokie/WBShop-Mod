@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class VotePolicy {
-    private int voteTotal;
+    private final int voteTotal;
     private int votesRequired;
-    private ArrayList<Vote> votes;
+    private final ArrayList<Vote> votes;
 
     public VotePolicy(int votesRequired, ArrayList<Vote> votes) {
         this.votesRequired = votesRequired;
