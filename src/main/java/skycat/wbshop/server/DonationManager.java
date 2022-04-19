@@ -16,7 +16,6 @@ public class DonationManager {
     public static HashMap<Item, Integer> pointValues;
 
     public static void addHandler(ScreenHandler handler) {
-        // TODO
         // This is how we managed to get the handler out of the method call in the main mod class. Hopefully we can manipulate it from here.
         // System.out.println(handler.getStacks().get(1));
         /*
