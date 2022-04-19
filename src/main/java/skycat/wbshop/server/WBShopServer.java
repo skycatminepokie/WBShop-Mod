@@ -3,6 +3,7 @@ package skycat.wbshop.server;
 import com.google.gson.Gson;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandExceptionType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
@@ -18,6 +19,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.UUID;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -28,6 +32,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
     public static final Gson GSON = new Gson();
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
     // public static final Logger LOGGER = LoggerFactory.getLogger("wbshop"); // Need to fix this
+    public static final ArrayList<VotePolicy> VOTE_POLICIES = new ArrayList<>();
 
     private static int donateCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         System.out.println("Donate called by " + context.getSource().getDisplayName().asString());
@@ -64,14 +69,25 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                 .executes(context -> {
                     // TODO: Better explanation
                     context.getSource().getPlayer().sendMessage(Text.of("Use this command to vote for policies."), false);
+                    // TODO: Needs to list available policies
                     return 0;
                 })
         )));
     }
 
     private static int voteCalledWithArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        // TODO: Finish this
-        System.out.println("This is the part where " + context.getSource().getPlayer().getName().asString() + " votes for policy #" + IntegerArgumentType.getInteger(context, "policy") + " with " + IntegerArgumentType.getInteger(context, "amount") + " points."); // I'm not sure about whether "policy" has to be the same object as when we used it to register
+        // TODO: Optimize
+        int amount = IntegerArgumentType.getInteger(context, "amount");
+        UUID uuid = context.getSource().getPlayer().getUuid();
+        Vote vote = new Vote(uuid, amount, LocalDateTime.now());
+        boolean success = VOTE_POLICIES.get(IntegerArgumentType.getInteger(context, "policy")).addVote(vote);
+        if (success) {
+            ECONOMY_MANAGER.removeBalance(uuid, amount);
+        } else {
+            // TODO: Add more info
+            context.getSource().getPlayer().sendMessage(Text.of("Failed to vote."), false);
+        }
+        System.out.println("Player " + context.getSource().getPlayer().getName().asString() + " voted for policy #" + IntegerArgumentType.getInteger(context, "policy") + " with " + IntegerArgumentType.getInteger(context, "amount") + " points."); // I'm not sure about whether "policy" has to be the same object as when we used it to register
         return 0;
     }
 
