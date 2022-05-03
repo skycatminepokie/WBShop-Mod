@@ -28,8 +28,8 @@ public class VotePolicy {
         return votes;
     }
 
-    public boolean addVote(Vote vote) {
-        return votes.add(vote);
+    public void addVote(Vote vote) {
+        votes.add(vote); // TODO: Error detection?
     }
 
     public void addVotes(ArrayList<Vote> votes) {

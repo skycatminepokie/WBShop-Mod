@@ -39,7 +39,7 @@ public class EconomyManager {
      * @throws IllegalArgumentException If the uuid does not have a valid entry associated with it
      */
     public int removeBalance(UUID uuid, int amount) {
-        if (isValidEntry(uuid)) {
+        if (!isValidEntry(uuid)) {
             throw new IllegalArgumentException("uuid does not have a valid entry");
         }
         wallets.put(uuid, wallets.get(uuid) - amount);
