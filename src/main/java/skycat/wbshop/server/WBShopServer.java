@@ -43,7 +43,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                     DonationManager.addHandler(handler);
                     return handler;
                 },
-                Text.of("MyGui")
+                Text.of("Donate")
         );
         /* OptionalInt syncId = */ context.getSource().getPlayer().openHandledScreen(screenHandlerFactory); // Create the screen handler and get the syncId
         return 1;
