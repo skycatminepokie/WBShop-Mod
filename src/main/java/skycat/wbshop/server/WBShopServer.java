@@ -2,6 +2,7 @@ package skycat.wbshop.server;
 
 import com.google.gson.Gson;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -25,13 +26,13 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 @Environment(EnvType.SERVER)
-public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
+public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping, ServerLifecycleEvents.ServerStarted { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
 
     public static final Gson GSON = new Gson();
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
-    // public static final Logger LOGGER = LoggerFactory.getLogger("wbshop"); // Need to fix this
-    public static final String VOTE_MANAGER_FILE_STRING = "wbshop_mob_VoteManager_save";
+    // public static final Logger LOGGER = LoggerFactory.getLogger("wbshop"); // TODO: Fix this
     public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
+    public static MinecraftServer SERVER_INSTANCE;
 
     private static int donateCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         System.out.println("Donate called by " + context.getSource().getDisplayName().asString());
@@ -41,12 +42,10 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                     DonateScreenHandler handler = new DonateScreenHandler(ScreenHandlerType.GENERIC_9X6, syncId, inv, new SimpleInventory(54), 6); // 54 for 6 rows of 9
                     DonationManager.addHandler(handler);
                     return handler;
-                }, // We need to somehow get this ScreenHandler outside this method call
+                },
                 Text.of("MyGui")
         );
         /* OptionalInt syncId = */ context.getSource().getPlayer().openHandledScreen(screenHandlerFactory); // Create the screen handler and get the syncId
-        // System.out.println(syncId.toString());
-
         return 1;
     }
 
@@ -54,24 +53,36 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
     public void onInitializeServer() {
         System.out.println("WBShop Initializing (Server)");
         ServerLifecycleEvents.SERVER_STOPPING.register(this);
+        ServerLifecycleEvents.SERVER_STARTED.register(this);
         DonationManager.initializePointValues();
+        registerCommands();
+    }
+
+    private void registerCommands() {
+        // Props to u/profbj on reddit for showing me how to register commands
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            // Props to u/profbj on reddit
             dispatcher.register(literal("donate").executes(WBShopServer::donateCalled));
+            dispatcher.register(literal("pay").executes(WBShopServer::payCalled));
+            dispatcher.register(literal("bal").executes(WBShopServer::balCalled));
+            dispatcher.register(literal("vote")
+                    .then(argument("policy", IntegerArgumentType.integer(0))
+                            .then(argument("amount", IntegerArgumentType.integer(1))
+                                    .executes(WBShopServer::voteCalledWithArgs)))
+                    .executes(context -> {
+                        // TODO: Better explanation
+                        context.getSource().getPlayer().sendMessage(Text.of("Use this command to vote for policies."), false);
+                        // TODO: Needs to list available policies
+                        return 0;
+                    })
+            );
+            /*
+            dispatcher.register(literal("policy")
+                    .then(argument("operation", StringArgumentType.word())) // TODO: Broken when used with argument. Maybe needs to be greedy if it's the last argument?
+                    .executes(WBShopServer::policyCalled)
+                    .executes(WBShopServer::policyCalled)
+            );
+             */
         });
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(literal("pay").executes(WBShopServer::payCalled))); // Looking to standardize this method reference
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(literal("bal").executes(WBShopServer::balCalled)));
-        CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> dispatcher.register(literal("vote")
-                .then(argument("policy", IntegerArgumentType.integer(0))
-                        .then(argument("amount", IntegerArgumentType.integer(1))
-                                .executes(WBShopServer::voteCalledWithArgs)))
-                .executes(context -> {
-                    // TODO: Better explanation
-                    context.getSource().getPlayer().sendMessage(Text.of("Use this command to vote for policies."), false);
-                    // TODO: Needs to list available policies
-                    return 0;
-                })
-        )));
     }
 
     private static int voteCalledWithArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -87,6 +98,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
     }
 
     private static int payCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        // TODO: Placeholder
         System.out.println(context.getSource().getPlayer().getUuid());
         return 0;
     }
@@ -97,8 +109,15 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         return 0;
     }
 
+    private static int policyCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        // context.getSource().getPlayer().sendMessage(Text.of(context.getArgument("operation", String.class)), false);
+        context.getSource().getPlayer().sendMessage(Text.of("hello there"), false);
+        return 1;
+    }
+
     @Override
     public void onServerStopping(MinecraftServer server) {
+        // Try to save the economy manager
         try {
             boolean success = ECONOMY_MANAGER.saveToFile();
             if (!success) {
@@ -107,7 +126,9 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         } catch (FileNotFoundException e) {
             System.out.println("ERROR: Failed to save economy manager to file! Printing stacktrace.");
             e.printStackTrace();
+            // TODO: Maybe print out alt version of econ manager so progress isn't lost?
         }
+        // Try to save the vote manager
         try {
             boolean success = VOTE_MANAGER.saveToFile();
             if (!success) {
@@ -116,6 +137,12 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         } catch (FileNotFoundException e) {
             System.out.println("ERROR: Failed to save vote manager to file! Printing stacktrace.");
             e.printStackTrace();
+            // TODO: Maybe print out alt version of vote manager so progress isn't lost?
         }
+    }
+
+    @Override
+    public void onServerStarted(MinecraftServer server) {
+        SERVER_INSTANCE = server;
     }
 }

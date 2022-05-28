@@ -13,7 +13,7 @@ public class VoteManager {
     private VoteManager() {
         VOTE_POLICIES = new ArrayList<>(); // TODO
         // WARN: This is for debugging, it should be deleted for use.
-        VOTE_POLICIES.add(new VotePolicy(100, new ArrayList<>()));
+        VOTE_POLICIES.add(new VotePolicy(10000, new ArrayList<>()));
     }
 
     public boolean saveToFile() throws FileNotFoundException {

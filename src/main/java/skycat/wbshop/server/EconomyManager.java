@@ -143,4 +143,11 @@ public class EconomyManager {
         return manager;
     }
 
+    public int getTotalBalance() {
+        int total = 0;
+        for (UUID uuid : wallets.keySet()) { // TODO: This is a hotfix, want to use .foreach
+            total += wallets.get(uuid);
+        }
+        return total;
+    }
 }

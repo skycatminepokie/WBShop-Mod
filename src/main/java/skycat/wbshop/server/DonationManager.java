@@ -58,6 +58,7 @@ public class DonationManager {
         itemStacks.iterator().forEachRemaining(itemStack -> {
             EconomyManager.getInstance().addBalance(player.getUuid(), getPointValue(itemStack));
         });
+        WorldBorderHelper.updateWorldBorder(WBShopServer.ECONOMY_MANAGER); // TODO: Change this so it's more immersive. Want it to happen every night, strike lightning proportionate to gained size
     }
 
     public static int getPointValue(ItemStack itemStack) {
