@@ -15,7 +15,7 @@ public class WorldBorderHelper {
     }
 
     private static double calcDesiredBorderWidth(EconomyManager economyManager) {
-        double blocks = economyManager.getTotalBalance()/7.0; // 1 block per 7 points TODO: Currently hardcoded, want to change that.
+        double blocks = economyManager.getTotalBalance()/5.0; // 1 block per 5 points TODO: Currently hardcoded, want to change that.
         if (blocks > 9) {
             return Math.sqrt(blocks);
         } else {
