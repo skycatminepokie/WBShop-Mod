@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
@@ -35,7 +35,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
     public static MinecraftServer SERVER_INSTANCE;
 
     private static int donateCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        System.out.println("Donate called by " + context.getSource().getDisplayName().getString());
+        System.out.println("Donate called by " + context.getSource().getDisplayName().getContent());
         SimpleNamedScreenHandlerFactory screenHandlerFactory = new SimpleNamedScreenHandlerFactory(
                 (syncId, inv, player) -> {
                     // ScreenHandler handler = GenericContainerScreenHandler.createGeneric9x6(syncId, inv);
@@ -45,7 +45,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                 },
                 Text.of("Donate")
         );
-        /* OptionalInt syncId = */ context.getSource().getPlayer().openHandledScreen(screenHandlerFactory); // Create the screen handler and get the syncId
+        /* OptionalInt syncId = */ context.getSource().getPlayerOrThrow().openHandledScreen(screenHandlerFactory); // Create the screen handler and get the syncId
         return 1;
     }
 
@@ -60,7 +60,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
 
     private void registerCommands() {
         // Props to u/profbj on reddit for showing me how to register commands
-        CommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess, environment) -> {
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             dispatcher.register(literal("donate").executes(WBShopServer::donateCalled));
             dispatcher.register(literal("pay").executes(WBShopServer::payCalled));
             dispatcher.register(literal("bal").executes(WBShopServer::balCalled));
@@ -70,7 +70,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                     .executes(WBShopServer::voteCalledWithArgs)))
                     .executes(context -> {
                         // TODO: Better explanation
-                        context.getSource().getPlayer().sendMessage(Text.of("Use this command to vote for policies."), false);
+                        context.getSource().getPlayerOrThrow().sendMessage(Text.of("Use this command to vote for policies."), false);
                         // TODO: Needs to list available policies
                         return 0;
                     })
@@ -88,30 +88,30 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
     private static int voteCalledWithArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         // TODO: Optimize
         int amount = IntegerArgumentType.getInteger(context, "amount");
-        UUID uuid = context.getSource().getPlayer().getUuid();
+        UUID uuid = context.getSource().getPlayerOrThrow().getUuid();
         Vote vote = new Vote(uuid, amount, LocalDateTime.now());
         VOTE_MANAGER.addVote(vote, context.getArgument("policy", int.class));
         ECONOMY_MANAGER.removeBalance(uuid, amount); // TODO: Can't detect failure yet
-        context.getSource().getPlayer().sendMessage(Text.of("Success!"), false);
-        System.out.println("Player " + context.getSource().getPlayer().getName().getString() + " voted for policy #" + IntegerArgumentType.getInteger(context, "policy") + " with " + IntegerArgumentType.getInteger(context, "amount") + " points."); // I'm not sure about whether "policy" has to be the same object as when we used it to register
+        context.getSource().getPlayerOrThrow().sendMessage(Text.of("Success!"), false);
+        System.out.println("Player " + context.getSource().getPlayerOrThrow().getName().getContent() + " voted for policy #" + IntegerArgumentType.getInteger(context, "policy") + " with " + IntegerArgumentType.getInteger(context, "amount") + " points."); // I'm not sure about whether "policy" has to be the same object as when we used it to register
         return 0;
     }
 
     private static int payCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         // TODO: Placeholder
-        System.out.println(context.getSource().getPlayer().getUuid());
+        System.out.println(context.getSource().getPlayerOrThrow().getUuid());
         return 0;
     }
 
     private static int balCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        PlayerEntity thePlayer = context.getSource().getPlayer();
+        PlayerEntity thePlayer = context.getSource().getPlayerOrThrow();
         thePlayer.sendMessage(Text.of("You have " + ECONOMY_MANAGER.getBalance(thePlayer.getUuid()) + " points."),false);
         return 0;
     }
 
     private static int policyCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         // context.getSource().getPlayer().sendMessage(Text.of(context.getArgument("operation", String.class)), false);
-        context.getSource().getPlayer().sendMessage(Text.of("hello there"), false);
+        context.getSource().getPlayerOrThrow().sendMessage(Text.of("hello there"), false);
         return 1;
     }
 
