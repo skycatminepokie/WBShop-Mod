@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.collection.DefaultedList;
+import skycat.wbshop.WBShopServer;
 
 import java.util.HashMap;
 import java.util.List;

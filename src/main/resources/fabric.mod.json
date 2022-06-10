@@ -15,11 +15,8 @@
   "icon": "assets/wbshop/icon.png",
   "environment": "server",
   "entrypoints": {
-    "main": [
-      "skycat.wbshop.WBShop"
-    ],
     "server": [
-      "skycat.wbshop.server.WBShopServer"
+      "skycat.wbshop.WBShopServer"
     ]
   },
   "mixins": [
