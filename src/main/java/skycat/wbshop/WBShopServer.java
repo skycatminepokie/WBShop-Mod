@@ -55,8 +55,8 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(4))
                                 .then(literal("pointsPerBlock")
                                         .then(argument("points", DoubleArgumentType.doubleArg(0.0))
-                                                .executes(WbsmpCommandHandler::setPointsPerBlock))
-                                        // Doesn't accept pointsPerBlock with no "points" argument
+                                                .executes(WbsmpCommandHandler::setPointsPerBlock)
+                                        )
                                 )
             );
         });
