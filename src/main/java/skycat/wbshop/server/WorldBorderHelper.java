@@ -3,7 +3,7 @@ package skycat.wbshop.server;
 import skycat.wbshop.WBShopServer;
 
 public class WorldBorderHelper {
-    public static double POINTS_PER_BLOCK = 3.0; // Default 3 points per block
+    public static double POINTS_PER_BLOCK = 3.0; // Default 3 points per block. TODO: Doesn't ever get updated
 
     /**
      * Updates the world border based on the aggregate number of points held
