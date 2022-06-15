@@ -8,11 +8,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.MinecraftServer;
 import skycat.wbshop.commands.*;
 import skycat.wbshop.server.DonationManager;
 import skycat.wbshop.server.EconomyManager;
 import skycat.wbshop.server.VoteManager;
+import skycat.wbshop.server.WorldBorderHelper;
 
 import java.io.FileNotFoundException;
 
@@ -27,6 +29,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
     // public static final Logger LOGGER = LoggerFactory.getLogger("wbshop"); // TODO: Fix this
     public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
     public static MinecraftServer SERVER_INSTANCE;
+    public static final Settings SETTINGS = Settings.load();
 
     @Override
     public void onInitializeServer() {
@@ -35,6 +38,8 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         ServerLifecycleEvents.SERVER_STARTED.register(this);
         DonationManager.initializePointValues();
         registerCommands();
+        WorldBorderHelper.setPointsPerBlock(SETTINGS.pointsPerBlock);
+        WorldBorderHelper.updateWorldBorder(ECONOMY_MANAGER);
     }
 
     private void registerCommands() {
@@ -55,8 +60,20 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(4))
                                 .then(literal("pointsPerBlock")
                                         .then(argument("points", DoubleArgumentType.doubleArg(0.0))
-                                                .executes(WbsmpCommandHandler::setPointsPerBlock))
+                                                .executes(WbsmpCommandHandler::setPointsPerBlock)
+                                        )
                                         // Doesn't accept pointsPerBlock with no "points" argument
+                                )
+                                .then(literal("econ")
+                                        .then(literal("remove")
+                                                .then(argument("player", EntityArgumentType.player())
+                                                        .then(argument("amount", IntegerArgumentType.integer(0))
+                                                                .executes(WbsmpCommandHandler::econRemoveWithArgs)
+                                                        )
+                                                )
+                                                .executes(WbsmpCommandHandler::econRemove)
+                                        )
+                                        .executes(WbsmpCommandHandler::econ)
                                 )
             );
         });
