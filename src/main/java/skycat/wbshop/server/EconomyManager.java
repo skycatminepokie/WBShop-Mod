@@ -1,6 +1,7 @@
 package skycat.wbshop.server;
 
 import org.jetbrains.annotations.NotNull;
+import skycat.wbshop.WBShopServer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
