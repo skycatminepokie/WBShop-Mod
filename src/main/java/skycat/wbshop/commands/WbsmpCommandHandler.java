@@ -12,7 +12,7 @@ public class WbsmpCommandHandler {
     }
 
     public static int setPointsPerBlock(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        WorldBorderHelper.setPointsPerBlock(context.getArgument("points", Double.class));
+        WorldBorderHelper.setPointsPerBlock(context.getArgument("points", double.class));
         return 1;
     }
 }

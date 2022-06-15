@@ -15,6 +15,7 @@ import skycat.wbshop.server.EconomyManager;
 import skycat.wbshop.server.VoteManager;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -22,17 +23,25 @@ import static net.minecraft.server.command.CommandManager.literal;
 @Environment(EnvType.SERVER)
 public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping, ServerLifecycleEvents.ServerStarted { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
 
-    public static final Gson GSON = new Gson();
-    public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
     // public static final Logger LOGGER = LoggerFactory.getLogger("wbshop"); // TODO: Fix this
-    public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
+    public static final Gson GSON = new Gson();
+    public static VoteManager VOTE_MANAGER;
+    public static EconomyManager ECONOMY_MANAGER;
     public static MinecraftServer SERVER_INSTANCE;
+    public static Settings SETTINGS;
+    public static WBShopSaverLoader SAVER_LOADER;
 
     @Override
     public void onInitializeServer() {
         System.out.println("WBShop Initializing (Server)");
+        try {
+            SAVER_LOADER = new WBShopSaverLoader();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         ServerLifecycleEvents.SERVER_STOPPING.register(this);
         ServerLifecycleEvents.SERVER_STARTED.register(this);
+        SAVER_LOADER.loadSave();
         DonationManager.initializePointValues();
         registerCommands();
     }
@@ -70,7 +79,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
       */
     @Override
     public void onServerStopping(MinecraftServer server) {
-        // Try to save the economy manager
+        /* // Try to save the economy manager
         try {
             boolean success = ECONOMY_MANAGER.saveToFile();
             if (!success) {
@@ -91,6 +100,12 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
             System.out.println("ERROR: Failed to save vote manager to file! Printing stacktrace.");
             e.printStackTrace();
             // TODO: Maybe print out alt version of vote manager so progress isn't lost?
+        }
+         */
+        try {
+            SAVER_LOADER.saveToFile();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(); // TODO: fallback when this fails
         }
     }
 
