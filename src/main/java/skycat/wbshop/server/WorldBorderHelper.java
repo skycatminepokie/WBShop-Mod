@@ -7,7 +7,6 @@ public class WorldBorderHelper {
 
     /**
      * Updates the world border based on the aggregate number of points held
-     *
      * @param economyManager The economy manager where wallets are held
      * @return Whether the operation succeeded
      */
@@ -20,7 +19,7 @@ public class WorldBorderHelper {
     }
 
     private static double calcDesiredBorderWidth(EconomyManager economyManager) {
-        double blocks = economyManager.getTotalBalance() / POINTS_PER_BLOCK;
+        double blocks = economyManager.getTotalBalance()/POINTS_PER_BLOCK;
         if (blocks > 9) {
             return Math.sqrt(blocks);
         } else {
