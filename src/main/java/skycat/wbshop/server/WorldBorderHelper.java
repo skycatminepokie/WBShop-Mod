@@ -19,7 +19,7 @@ public class WorldBorderHelper {
     }
 
     private static double calcDesiredBorderWidth(EconomyManager economyManager) {
-        double blocks = economyManager.getTotalBalance()/POINTS_PER_BLOCK;
+        double blocks = economyManager.getTotalBalance()/POINTS_PER_BLOCK; // 1 block per 3 points TODO: Currently hardcoded, want to change that.
         if (blocks > 9) {
             return Math.sqrt(blocks);
         } else {
@@ -27,7 +27,7 @@ public class WorldBorderHelper {
         }
     }
 
-    public static void setPointsPerBlock(double points) { // TODO: This isn't ever loaded in. Need to make saving/loading class.
+    public static void setPointsPerBlock(double points) {
         POINTS_PER_BLOCK = points;
     }
 }
