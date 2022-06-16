@@ -9,7 +9,10 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.MinecraftServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import skycat.wbshop.commands.*;
 import skycat.wbshop.server.DonationManager;
 import skycat.wbshop.server.EconomyManager;
@@ -26,10 +29,10 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
 
     public static final Gson GSON = new Gson();
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
-    // public static final Logger LOGGER = LoggerFactory.getLogger("wbshop"); // TODO: Fix this
+     public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
     public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
-    public static MinecraftServer SERVER_INSTANCE;
     public static final Settings SETTINGS = Settings.load();
+    public static MinecraftServer SERVER_INSTANCE;
 
     @Override
     public void onInitializeServer() {
@@ -52,29 +55,43 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                     .then(argument("policy", IntegerArgumentType.integer(0))
                             .then(argument("amount", IntegerArgumentType.integer(1))
                                     .executes(VoteCommandHandler::calledWithAmount))
-                            .executes(VoteCommandHandler::calledWithPolicy)) // TODO: Test nesting
+                            .executes(VoteCommandHandler::calledWithPolicy))
                     .executes(VoteCommandHandler::voteCalled)
             );
             dispatcher.register(
                     literal("wbsmp")
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(4))
-                                .then(literal("pointsPerBlock")
-                                        .then(argument("points", DoubleArgumentType.doubleArg(0.0))
-                                                .executes(WbsmpCommandHandler::setPointsPerBlock)
-                                        )
-                                        // Doesn't accept pointsPerBlock with no "points" argument
-                                )
-                                .then(literal("econ")
-                                        .then(literal("remove")
-                                                .then(argument("player", EntityArgumentType.player())
-                                                        .then(argument("amount", IntegerArgumentType.integer(0))
-                                                                .executes(WbsmpCommandHandler::econRemoveWithArgs)
-                                                        )
-                                                )
-                                                .executes(WbsmpCommandHandler::econRemove)
-                                        )
-                                        .executes(WbsmpCommandHandler::econ)
-                                )
+                            .then(literal("pointsPerBlock")
+                                            .then(argument("points", DoubleArgumentType.doubleArg(0.0))
+                                                    .executes(WbsmpCommandHandler::setPointsPerBlock)
+                                            )
+                                    // Doesn't accept pointsPerBlock with no "points" argument
+                            )
+                            .then(literal("econ")
+                                    .then(literal("remove")
+                                            .then(argument("player", GameProfileArgumentType.gameProfile())
+                                                    .then(argument("amount", IntegerArgumentType.integer(0))
+                                                            .executes(WbsmpCommandHandler::econRemoveWithArgs)
+                                                    )
+                                            )
+                                            .executes(WbsmpCommandHandler::econRemove)
+                                    )
+                                    .then(literal("add")
+                                            .then(argument("player", GameProfileArgumentType.gameProfile())
+                                                    .then(argument("amount", IntegerArgumentType.integer(0))
+                                                            .executes(WbsmpCommandHandler::econAddWithArgs)
+                                                    )
+                                            )
+                                            .executes(WbsmpCommandHandler::econAdd)
+                                    )
+                                    .then(literal("get")
+                                            .then(argument("player", GameProfileArgumentType.gameProfile())
+                                                    .executes(WbsmpCommandHandler::econGetWithArgs)
+                                            )
+                                            .executes(WbsmpCommandHandler::econGet)
+                                    )
+                                    .executes(WbsmpCommandHandler::econ)
+                            )
             );
         });
     }
