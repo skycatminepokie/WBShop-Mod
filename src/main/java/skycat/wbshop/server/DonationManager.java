@@ -39,6 +39,7 @@ public class DonationManager {
         });
         */
     }
+
     public static void donateScreenClosing(ScreenHandler handler, PlayerEntity player) {
         // DEBUG:
         // System.out.println("Closing handler with syncId " + handler.syncId); // Looks like we won't have to worry about managing syncIds. That's nice.
@@ -55,13 +56,6 @@ public class DonationManager {
 
     }
 
-    public static void makeDonation(List<ItemStack> itemStacks, PlayerEntity player) {
-        itemStacks.iterator().forEachRemaining(itemStack -> {
-            EconomyManager.getInstance().addBalance(player.getUuid(), getPointValue(itemStack));
-        });
-        WorldBorderHelper.updateWorldBorder(WBShopServer.ECONOMY_MANAGER); // TODO: Change this so it's more immersive. Want it to happen every night, strike lightning proportionate to gained size
-    }
-
     public static int getPointValue(ItemStack itemStack) {
         // DEBUG:
         // System.out.println(itemStack.getCount() + "x " + itemStack.getItem().toString());
@@ -73,5 +67,12 @@ public class DonationManager {
         // DEBUG:
         // Is an Item a representation of a kind of item, or is it an actual item that has gameplay meaning? I think it's the former.
         // Can potentially use ItemStackArgumentType to make a command to update the values
+    }
+
+    public static void makeDonation(List<ItemStack> itemStacks, PlayerEntity player) {
+        itemStacks.iterator().forEachRemaining(itemStack -> {
+            EconomyManager.getInstance().addBalance(player.getUuid(), getPointValue(itemStack));
+        });
+        WorldBorderHelper.updateWorldBorder(WBShopServer.ECONOMY_MANAGER); // TODO: Change this so it's more immersive. Want it to happen every night, strike lightning proportionate to gained size
     }
 }

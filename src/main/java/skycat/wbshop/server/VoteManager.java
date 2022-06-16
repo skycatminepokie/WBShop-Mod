@@ -18,11 +18,13 @@ public class VoteManager {
         VOTE_POLICIES.add(new VotePolicy(10000, new ArrayList<>()));
     }
 
-    public boolean saveToFile() throws FileNotFoundException {
-        PrintWriter printWriter = new PrintWriter(SAVE_FILE);
-        printWriter.write(WBShopServer.GSON.toJson(this));
-        printWriter.close();
-        return true;
+    private static VoteManager loadFromFile() throws FileNotFoundException {
+        String jsonString = "";
+        Scanner fileScanner = new Scanner(SAVE_FILE);
+        while (fileScanner.hasNextLine()) {
+            jsonString += fileScanner.nextLine();
+        }
+        return WBShopServer.GSON.fromJson(jsonString, VoteManager.class);
     }
 
     public static VoteManager loadOrMake() {
@@ -34,23 +36,14 @@ public class VoteManager {
         return new VoteManager();
     }
 
-    private static VoteManager loadFromFile() throws FileNotFoundException {
-        String jsonString = "";
-        Scanner fileScanner = new Scanner(SAVE_FILE);
-        while (fileScanner.hasNextLine()) {
-            jsonString += fileScanner.nextLine();
-        }
-        return WBShopServer.GSON.fromJson(jsonString, VoteManager.class);
-    }
-
-
     public void addVote(Vote vote, int policyNumber) {
         VOTE_POLICIES.get(policyNumber).addVote(vote); // TODO: Make this handle things if the policy doesn't exist
     }
 
     /**
      * Add a vote to a given policy
-     * @param vote The vote for the policy
+     *
+     * @param vote       The vote for the policy
      * @param votePolicy The policy to vote for
      * @return true if the policy has been registered, false if the policy was not registered
      */
@@ -64,6 +57,13 @@ public class VoteManager {
 
     public ArrayList<VotePolicy> getVotePolicies() {
         return VOTE_POLICIES;
+    }
+
+    public boolean saveToFile() throws FileNotFoundException {
+        PrintWriter printWriter = new PrintWriter(SAVE_FILE);
+        printWriter.write(WBShopServer.GSON.toJson(this));
+        printWriter.close();
+        return true;
     }
 
     // count votes, remove votes, other util methods

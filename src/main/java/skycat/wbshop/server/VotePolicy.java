@@ -1,31 +1,17 @@
 package skycat.wbshop.server;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class VotePolicy {
     private final int voteTotal;
-    private int votesRequired;
     private final ArrayList<Vote> votes;
+    private int votesRequired;
 
     public VotePolicy(int votesRequired, ArrayList<Vote> votes) {
         this.votesRequired = votesRequired;
         this.votes = votes;
         voteTotal = 0;
-    }
-
-    public int getVotesRequired() {
-        return votesRequired;
-    }
-
-    public void setVotesRequired(int votesRequired) {
-        this.votesRequired = votesRequired;
-    }
-
-    public ArrayList<Vote> getVotes() {
-        return votes;
     }
 
     public void addVote(Vote vote) {
@@ -43,6 +29,18 @@ public class VotePolicy {
     public int getVoteTotal() {
         updateVoteTotal();
         return voteTotal;
+    }
+
+    public ArrayList<Vote> getVotes() {
+        return votes;
+    }
+
+    public int getVotesRequired() {
+        return votesRequired;
+    }
+
+    public void setVotesRequired(int votesRequired) {
+        this.votesRequired = votesRequired;
     }
 
     private void updateVoteTotal() {

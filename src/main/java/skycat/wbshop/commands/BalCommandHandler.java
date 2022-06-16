@@ -11,7 +11,7 @@ import static skycat.wbshop.WBShopServer.ECONOMY_MANAGER;
 public class BalCommandHandler {
     public static int balCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         PlayerEntity thePlayer = context.getSource().getPlayer();
-        thePlayer.sendMessage(Text.of("You have " + ECONOMY_MANAGER.getBalance(thePlayer.getUuid()) + " points."),false);
+        thePlayer.sendMessage(Text.of("You have " + ECONOMY_MANAGER.getBalance(thePlayer.getUuid()) + " points."), false);
         return 0;
     }
 }

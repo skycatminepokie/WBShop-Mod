@@ -6,22 +6,10 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Settings {
-    public double pointsPerBlock = 3;
     public static final String SETTINGS_FILE_NAME = "wbshop_settings.txt";
+    public double pointsPerBlock = 3;
 
     private Settings() {}
-
-    public void save() {
-        try {
-            PrintWriter printWriter = new PrintWriter(SETTINGS_FILE_NAME);
-            printWriter.println(WBShopServer.GSON.toJson(this));
-            printWriter.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Failed to save settings. Dumping info:");
-            System.out.println("pointsPerBlock:" + pointsPerBlock);
-            throw new RuntimeException(e);
-        }
-    }
 
     public static Settings load() {
         Settings loaded;
@@ -35,5 +23,17 @@ public class Settings {
             return new Settings();
         }
         return loaded;
+    }
+
+    public void save() {
+        try {
+            PrintWriter printWriter = new PrintWriter(SETTINGS_FILE_NAME);
+            printWriter.println(WBShopServer.GSON.toJson(this));
+            printWriter.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Failed to save settings. Dumping info:");
+            System.out.println("pointsPerBlock:" + pointsPerBlock);
+            throw new RuntimeException(e);
+        }
     }
 }

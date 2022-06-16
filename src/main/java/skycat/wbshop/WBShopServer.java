@@ -8,7 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
 
     public static final Gson GSON = new Gson();
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
-     public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
+    public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
     public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
     public static final Settings SETTINGS = Settings.load();
     public static MinecraftServer SERVER_INSTANCE;
@@ -43,6 +42,37 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         registerCommands();
         WorldBorderHelper.setPointsPerBlock(SETTINGS.pointsPerBlock);
         WorldBorderHelper.updateWorldBorder(ECONOMY_MANAGER);
+    }
+
+    @Override
+    public void onServerStarted(MinecraftServer server) {
+        SERVER_INSTANCE = server;
+    }
+
+    @Override
+    public void onServerStopping(MinecraftServer server) {
+        // Try to save the economy manager
+        try {
+            boolean success = ECONOMY_MANAGER.saveToFile();
+            if (!success) {
+                System.out.println("ERROR: Failed to save economy manager to file!");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("ERROR: Failed to save economy manager to file! Printing stacktrace.");
+            e.printStackTrace();
+            // TODO: Maybe print out alt version of econ manager so progress isn't lost?
+        }
+        // Try to save the vote manager
+        try {
+            boolean success = VOTE_MANAGER.saveToFile();
+            if (!success) {
+                System.out.println("ERROR: Failed to save vote manager to file!");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("ERROR: Failed to save vote manager to file! Printing stacktrace.");
+            e.printStackTrace();
+            // TODO: Maybe print out alt version of vote manager so progress isn't lost?
+        }
     }
 
     private void registerCommands() {
@@ -94,42 +124,5 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                             )
             );
         });
-    }
-
-    /* private static int policyCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        // context.getSource().getPlayer().sendMessage(Text.of(context.getArgument("operation", String.class)), false);
-        context.getSource().getPlayer().sendMessage(Text.of("hello there"), false);
-        return 1;
-    }
-      */
-    @Override
-    public void onServerStopping(MinecraftServer server) {
-        // Try to save the economy manager
-        try {
-            boolean success = ECONOMY_MANAGER.saveToFile();
-            if (!success) {
-                System.out.println("ERROR: Failed to save economy manager to file!");
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("ERROR: Failed to save economy manager to file! Printing stacktrace.");
-            e.printStackTrace();
-            // TODO: Maybe print out alt version of econ manager so progress isn't lost?
-        }
-        // Try to save the vote manager
-        try {
-            boolean success = VOTE_MANAGER.saveToFile();
-            if (!success) {
-                System.out.println("ERROR: Failed to save vote manager to file!");
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("ERROR: Failed to save vote manager to file! Printing stacktrace.");
-            e.printStackTrace();
-            // TODO: Maybe print out alt version of vote manager so progress isn't lost?
-        }
-    }
-
-    @Override
-    public void onServerStarted(MinecraftServer server) {
-        SERVER_INSTANCE = server;
     }
 }
