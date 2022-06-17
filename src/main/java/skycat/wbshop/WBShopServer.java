@@ -123,6 +123,9 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                     .executes(WbsmpCommandHandler::econ)
                             )
             );
+            dispatcher.register(literal("test")
+                    .executes(TestCommandHandler::testCalled)
+            );
         });
     }
 }

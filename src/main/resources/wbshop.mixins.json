@@ -7,6 +7,9 @@
   ],
   "client": [
   ],
+  "server": [
+    "MerchantScreenHandlerPlaySoundMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

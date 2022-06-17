@@ -1,5 +1,10 @@
 package skycat.wbshop.server;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.KnowledgeBookItem;
+import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 import skycat.wbshop.WBShopServer;
 
@@ -17,6 +22,13 @@ import java.util.UUID;
 public class EconomyManager {
     public static final File SAVE_FILE = new File("WBShopEconomyManagerSave.txt");
     public HashMap<UUID, @NotNull Integer> wallets;
+    public static final ItemStack POINT_VOUCHER_1;
+    static {
+        POINT_VOUCHER_1 = new ItemStack(Items.PAPER, 1);
+        NbtCompound onePointNbtCompound = new NbtCompound();
+        onePointNbtCompound.putInt("wbsmpVoucherPoints", 1);
+        POINT_VOUCHER_1.setNbt(onePointNbtCompound);
+    }
 
     /**
      * Get the instance of this class that is initialized by {@link WBShopServer}.
