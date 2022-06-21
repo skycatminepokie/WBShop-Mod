@@ -8,6 +8,11 @@ public class PayCommandHandler {
     public static int payCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         // TODO: Placeholder
         System.out.println(context.getSource().getPlayer().getUuid());
-        return 0;
+        return 1;
+    }
+
+    public static int payCalledWithArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+
+        return 1;
     }
 }

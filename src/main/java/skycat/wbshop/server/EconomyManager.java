@@ -159,4 +159,8 @@ public class EconomyManager {
 
         return true;
     }
+
+    public void onPlayerDeath(UUID uuid) {
+        removeBalance(uuid, getBalance(uuid)/5); // Default 20% point loss on death
+    }
 }
