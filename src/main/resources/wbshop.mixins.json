@@ -4,11 +4,13 @@
   "package": "skycat.wbshop.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+
   ],
   "client": [
   ],
   "server": [
     "MerchantScreenHandlerPlaySoundMixin"
+    "ServerPlayerOnDeathMixin"
   ],
   "injectors": {
     "defaultRequire": 1
