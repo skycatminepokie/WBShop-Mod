@@ -62,6 +62,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
             e.printStackTrace();
             // TODO: Maybe print out alt version of econ manager so progress isn't lost?
         }
+        SETTINGS.save();
         // Try to save the vote manager
         try {
             boolean success = VOTE_MANAGER.saveToFile();
