@@ -64,6 +64,9 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         }
         SETTINGS.save();
         // Try to save the vote manager
+        // TODO: Hotfix for error saving vote manage: just don't save it xd
+        // WARN: VOTE_MANAGER does not save
+        /*
         try {
             boolean success = VOTE_MANAGER.saveToFile();
             if (!success) {
@@ -74,6 +77,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
             e.printStackTrace();
             // TODO: Maybe print out alt version of vote manager so progress isn't lost?
         }
+         */
     }
 
     private void registerCommands() {
