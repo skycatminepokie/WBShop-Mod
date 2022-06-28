@@ -52,10 +52,10 @@ public class EconomyManager {
         try {
             manager = loadFromFile();
         } catch (FileNotFoundException e) {
-            System.out.println("Could not find file to load player wallets from.");
+            WBShopServer.LOGGER.info("Could not find file to load player wallets from.");
         }
         if (manager == null) {
-            System.out.println("Initializing a new player wallet save file.");
+            WBShopServer.LOGGER.info("Initializing a new player wallet save file.");
             manager = new EconomyManager();
             manager.wallets = new HashMap<>();
         }
@@ -71,7 +71,7 @@ public class EconomyManager {
      */
     public int addBalance(UUID uuid, int amount) {
         if (!isValidEntry(uuid)) {
-            System.out.println("Warning: uuid was not valid in addBalance. Initializing an empty wallet.");
+            WBShopServer.LOGGER.warn("uuid was not valid in addBalance. Initializing an empty wallet.");
             wallets.put(uuid, 0);
         }
         wallets.put(uuid, wallets.get(uuid) + amount);

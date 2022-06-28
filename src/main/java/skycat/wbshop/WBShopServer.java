@@ -35,7 +35,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
 
     @Override
     public void onInitializeServer() {
-        System.out.println("WBShop Initializing (Server)");
+        WBShopServer.LOGGER.info("WBShop Initializing (Server)");
         ServerLifecycleEvents.SERVER_STOPPING.register(this);
         ServerLifecycleEvents.SERVER_STARTED.register(this);
         DonationManager.initializePointValues();
@@ -55,10 +55,10 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         try {
             boolean success = ECONOMY_MANAGER.saveToFile();
             if (!success) {
-                System.out.println("ERROR: Failed to save economy manager to file!");
+                WBShopServer.LOGGER.error("ERROR: Failed to save economy manager to file!");
             }
         } catch (FileNotFoundException e) {
-            System.out.println("ERROR: Failed to save economy manager to file! Printing stacktrace.");
+            WBShopServer.LOGGER.error("ERROR: Failed to save economy manager to file! Printing stacktrace.");
             e.printStackTrace();
             // TODO: Maybe print out alt version of econ manager so progress isn't lost?
         }

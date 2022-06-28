@@ -19,7 +19,7 @@ public class Settings {
             loaded = WBShopServer.GSON.fromJson(scanner.nextLine(), Settings.class);
             scanner.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Failed to load settings. Creating new settings.");
+            WBShopServer.LOGGER.warn("Failed to load settings. Creating new settings.");
             return new Settings();
         }
         return loaded;
@@ -31,8 +31,7 @@ public class Settings {
             printWriter.println(WBShopServer.GSON.toJson(this));
             printWriter.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Failed to save settings. Dumping info:");
-            System.out.println("pointsPerBlock:" + pointsPerBlock);
+            WBShopServer.LOGGER.error("Failed to save settings. Dumping info:\npointsPerBlock:" + pointsPerBlock);
             throw new RuntimeException(e);
         }
     }

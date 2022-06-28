@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import skycat.wbshop.WBShopServer;
 import skycat.wbshop.server.Vote;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class VoteCommandHandler {
         VOTE_MANAGER.addVote(vote, context.getArgument("policy", int.class));
         ECONOMY_MANAGER.removeBalance(uuid, amount); // TODO: Can't detect failure yet
         context.getSource().getPlayer().sendMessage(Text.of("Success!"), false);
-        System.out.println("Player " + context.getSource().getPlayer().getName().getString() + " voted for policy #" + IntegerArgumentType.getInteger(context, "policy") + " with " + IntegerArgumentType.getInteger(context, "amount") + " points."); // I'm not sure about whether "policy" has to be the same object as when we used it to register
+        WBShopServer.LOGGER.info("Player " + context.getSource().getPlayer().getName().getString() + " voted for policy #" + IntegerArgumentType.getInteger(context, "policy") + " with " + IntegerArgumentType.getInteger(context, "amount") + " points."); // I'm not sure about whether "policy" has to be the same object as when we used it to register
         return 1;
     }
 

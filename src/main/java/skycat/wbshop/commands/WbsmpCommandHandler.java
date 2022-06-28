@@ -40,7 +40,7 @@ public class WbsmpCommandHandler {
     public static int econGetWithArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Collection<GameProfile> targets = GameProfileArgumentType.getProfileArgument(context, "player");
         for (GameProfile target : targets) {
-            System.out.println("id: " + target.getId());
+            // WBShopServer.LOGGER.info("id: " + target.getId());
             context.getSource().getPlayer().sendMessage(Text.of(target.getName() + " has " + EconomyManager.getInstance().getBalance(target.getId()) + " points."), false);
         }
         return 1;

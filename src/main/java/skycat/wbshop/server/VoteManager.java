@@ -31,12 +31,12 @@ public class VoteManager {
         try {
             VoteManager loaded = loadFromFile();
             if (loaded == null) {
-                System.out.println("VoteManager from file was null. Creating a new one");
+                WBShopServer.LOGGER.warn("VoteManager from file was null. Creating a new one");
                 return new VoteManager();
             }
             return loaded;
         } catch (FileNotFoundException e) {
-            System.out.println("Error loading VoteManager from file (file was not found). Creating a new one");
+            WBShopServer.LOGGER.warn("Error loading VoteManager from file (file was not found). Creating a new one");
             return new VoteManager();
         }
     }
