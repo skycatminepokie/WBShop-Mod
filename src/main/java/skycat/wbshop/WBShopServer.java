@@ -97,6 +97,11 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                             )
                                     // Doesn't accept pointsPerBlock with no "points" argument
                             )
+                            .then(literal("pointLoss")
+                                    .then(argument("loss", DoubleArgumentType.doubleArg(0.0))
+                                            .executes(WbsmpCommandHandler::setDeathLoss)
+                                    )
+                            )
                             .then(literal("econ")
                                     .then(literal("remove")
                                             .then(argument("player", GameProfileArgumentType.gameProfile())

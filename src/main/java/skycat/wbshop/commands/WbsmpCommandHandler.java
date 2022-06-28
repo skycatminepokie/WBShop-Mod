@@ -71,4 +71,9 @@ public class WbsmpCommandHandler {
         // TODO: Placeholder
         return 1;
     }
+
+    public static int setDeathLoss(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        EconomyManager.POINT_LOSS = context.getArgument("loss", Double.class);
+        return 1;
+    }
 }

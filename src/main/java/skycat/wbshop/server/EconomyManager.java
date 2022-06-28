@@ -17,6 +17,7 @@ import java.util.UUID;
 public class EconomyManager {
     public static final File SAVE_FILE = new File("WBShopEconomyManagerSave.txt");
     public HashMap<UUID, @NotNull Integer> wallets;
+    public static double POINT_LOSS = 0.1; // Default lose 10% of points on death
 
     /**
      * Get the instance of this class that is initialized by {@link WBShopServer}.
@@ -101,6 +102,7 @@ public class EconomyManager {
         return total;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isValidEntry(UUID key) {
         if (!wallets.containsKey(key)) { // Separated into different cases for easy modification later
             return false; // UUID key is not found
@@ -161,6 +163,6 @@ public class EconomyManager {
     }
 
     public void onPlayerDeath(UUID uuid) {
-        removeBalance(uuid, getBalance(uuid)/5); // Default 20% point loss on death
+        removeBalance(uuid, (int) (getBalance(uuid) * (POINT_LOSS))); // Lose POINT_LOSS * balance points on death (ex if POINT_LOSS = 0.1, lose 10% of points on death)
     }
 }

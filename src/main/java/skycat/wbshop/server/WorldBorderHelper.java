@@ -3,7 +3,7 @@ package skycat.wbshop.server;
 import skycat.wbshop.WBShopServer;
 
 public class WorldBorderHelper {
-    public static double POINTS_PER_BLOCK = 3.0; // Default 3 points per block. TODO: Doesn't save
+    public static double POINTS_PER_BLOCK = 3.0; // Default 3 points per block.
 
     private static double calcDesiredBorderWidth(EconomyManager economyManager) {
         double blocks = economyManager.getTotalBalance() / POINTS_PER_BLOCK; // 1 block per 3 points TODO: Currently hardcoded, want to change that.
