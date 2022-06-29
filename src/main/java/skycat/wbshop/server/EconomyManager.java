@@ -72,11 +72,27 @@ public class EconomyManager {
     public int addBalance(UUID uuid, int amount) {
         if (!isValidEntry(uuid)) {
             WBShopServer.LOGGER.warn("uuid was not valid in addBalance. Initializing an empty wallet.");
-            wallets.put(uuid, 0);
+            initializeWallet(uuid);
         }
         wallets.put(uuid, wallets.get(uuid) + amount);
         return wallets.get(uuid);
 
+    }
+
+    /**
+     * Makes a new wallet and sets the balance to zero.
+     *
+     * @param uuid The {@link UUID} to associate with the wallet
+     * @return {@code true} if the wallet was initialized, {@code false} if the wallet already existed (and so was not initialized)
+     */
+    public boolean initializeWallet(UUID uuid) {
+        if (isValidEntry(uuid)) {
+            WBShopServer.LOGGER.warn("initializeWallet was called, but the wallet for uuid " + uuid.toString() + " is already initialized!");
+            return false;
+        } else {
+            wallets.put(uuid, 0);
+            return true;
+        }
     }
 
     /**
