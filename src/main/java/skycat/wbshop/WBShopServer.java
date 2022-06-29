@@ -84,7 +84,13 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         // Props to u/profbj on reddit for showing me how to register commands
         CommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess, environment) -> {
             dispatcher.register(literal("donate").executes(DonateCommandHandler::donateCalled));
-            dispatcher.register(literal("pay").executes(PayCommandHandler::payCalled));
+            dispatcher.register(literal("pay")
+                    .then(argument("player", GameProfileArgumentType.gameProfile())
+                            .then(argument("amount", IntegerArgumentType.integer(1))
+                                    .executes(PayCommandHandler::payCalledWithArgs)
+                            )
+                    )
+                    .executes(PayCommandHandler::payCalled));
             dispatcher.register(literal("bal").executes(BalCommandHandler::balCalled));
             dispatcher.register(literal("vote")
                     .then(argument("policy", IntegerArgumentType.integer(0))
