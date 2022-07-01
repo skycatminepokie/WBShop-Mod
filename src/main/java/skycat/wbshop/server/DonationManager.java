@@ -5,6 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtInt;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.collection.DefaultedList;
 import skycat.wbshop.WBShopServer;
@@ -57,8 +59,14 @@ public class DonationManager {
     }
 
     public static int getPointValue(ItemStack itemStack) {
-        // DEBUG:
-        // System.out.println(itemStack.getCount() + "x " + itemStack.getItem().toString());
+        NbtCompound compound = itemStack.getNbt();
+        if (compound != null) { // If it has custom NBT
+            NbtInt pointsNbt = (NbtInt) compound.get("wbpoints"); // Is there a better name than pointsNbt? I want it to note that it is in an nbt form.
+            if (pointsNbt != null) { // And it has wbpoints stored in its nbt
+                return pointsNbt.intValue() * itemStack.getCount(); // Then give credit for the value stored in the voucher
+            }
+        }
+
         return itemStack.getCount(); // For now, every item will be worth exactly 1 point.
     }
 

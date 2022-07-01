@@ -31,7 +31,7 @@ public class PayCommandHandler {
         if (EconomyManager.getInstance().getBalance(sentFrom) >= amount) {
             EconomyManager.getInstance().transferBalance(sentFrom, ((GameProfile) sendTo.toArray()[0]).getId(), amount);
         } else {
-            throw new SimpleCommandExceptionType(new LiteralMessage("You don't have enought points for that!")).create();
+            throw new SimpleCommandExceptionType(new LiteralMessage("You don't have enough points for that!")).create();
         }
 
         return 1;

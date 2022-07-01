@@ -21,7 +21,7 @@ public class DonateCommandHandler {
                 (syncId, inv, player) -> {
                     // ScreenHandler handler = GenericContainerScreenHandler.createGeneric9x6(syncId, inv);
                     DonateScreenHandler handler = new DonateScreenHandler(ScreenHandlerType.GENERIC_9X6, syncId, inv, new SimpleInventory(54), 6); // 54 for 6 rows of 9
-                    DonationManager.addHandler(handler);
+                    DonationManager.addHandler(handler); // TODO: This might not actually be doing anything...
                     return handler;
                 },
                 Text.of("Donate")

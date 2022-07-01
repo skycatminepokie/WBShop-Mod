@@ -139,6 +139,12 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                     .executes(WbsmpCommandHandler::econ)
                             )
             );
+            dispatcher.register(literal("withdraw")
+                    .then(argument("amount", IntegerArgumentType.integer(1))
+                            .executes(WithdrawCommandHandler::withdrawCalledAmount)
+                    )
+            );
+
         });
     }
 }
