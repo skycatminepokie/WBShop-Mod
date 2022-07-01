@@ -50,8 +50,8 @@ public class WithdrawCommandHandler {
         // Prep lore
         NbtList lore = new NbtList();
         // NbtString#of needs the JSON format of a Text in the form of a string
-        lore.add(NbtString.of(Text.Serializer.toJson(Text.of(amount + " points"))));
-        lore.add(NbtString.of(Text.Serializer.toJson(Text.of("Withdrawn by " + context.getSource().getName()))));
+        lore.add(NbtString.of(Text.Serializer.toJson(Text.of(amount + " point" + (amount==1 ? "": "s")))));
+        // lore.add(NbtString.of(Text.Serializer.toJson(Text.of("Withdrawn by " + context.getSource().getName()))));
 
         // Set lore
         itemStack.getOrCreateSubNbt("display").put("Lore", lore);
