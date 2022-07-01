@@ -24,7 +24,7 @@ public class VoteCommandHandler {
         Vote vote = new Vote(uuid, amount, LocalDateTime.now());
         VOTE_MANAGER.addVote(vote, context.getArgument("policy", int.class));
         ECONOMY_MANAGER.removeBalance(uuid, amount); // TODO: Can't detect failure yet
-        context.getSource().getPlayer().sendMessage(Text.of("Success!"), false);
+        context.getSource().sendFeedback(Text.of("Success!"), false);
         WBShopServer.LOGGER.info("Player " + context.getSource().getPlayer().getName().getString() + " voted for policy #" + IntegerArgumentType.getInteger(context, "policy") + " with " + IntegerArgumentType.getInteger(context, "amount") + " points."); // I'm not sure about whether "policy" has to be the same object as when we used it to register
         return 1;
     }
@@ -39,7 +39,7 @@ public class VoteCommandHandler {
         // Called with no args
         // TODO: Placeholder
         // TODO: Better explanation
-        context.getSource().getPlayer().sendMessage(Text.of("Use this command to vote for policies."), false);
+        context.getSource().sendFeedback(Text.of("Use this command to vote for policies."), false);
         // TODO: Needs to list available policies
         return 1;
     }

@@ -13,12 +13,12 @@ import java.util.Collection;
 
 public class WbsmpCommandHandler {
     public static int econ(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().getPlayer().sendMessage(Text.of("/econ: Manage the economy"), false);
+        context.getSource().sendFeedback(Text.of("/econ: Manage the economy"), false);
         return 1;
     }
 
     public static int econAdd(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().getPlayer().sendMessage(Text.of("/econ add: Add points to a player's wallet"), false);
+        context.getSource().sendFeedback(Text.of("/econ add: Add points to a player's wallet"), false);
         return 1;
     }
 
@@ -27,13 +27,13 @@ public class WbsmpCommandHandler {
         for (GameProfile target : targets) {
             int amount = context.getArgument("amount", Integer.class);
             EconomyManager.getInstance().addBalance(target.getId(), amount);
-            context.getSource().getPlayer().sendMessage(Text.of("Added " + amount + " points to " + target.getName()), false);
+            context.getSource().sendFeedback(Text.of("Added " + amount + " points to " + target.getName()), false);
         }
         return 1;
     }
 
     public static int econGet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().getPlayer().sendMessage(Text.of("/econ get: Get the number of points a player has"), false);
+        context.getSource().sendFeedback(Text.of("/econ get: Get the number of points a player has"), false);
         return 1;
     }
 
@@ -41,13 +41,13 @@ public class WbsmpCommandHandler {
         Collection<GameProfile> targets = GameProfileArgumentType.getProfileArgument(context, "player");
         for (GameProfile target : targets) {
             // WBShopServer.LOGGER.info("id: " + target.getId());
-            context.getSource().getPlayer().sendMessage(Text.of(target.getName() + " has " + EconomyManager.getInstance().getBalance(target.getId()) + " points."), false);
+            context.getSource().sendFeedback(Text.of(target.getName() + " has " + EconomyManager.getInstance().getBalance(target.getId()) + " points."), false);
         }
         return 1;
     }
 
     public static int econRemove(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().getPlayer().sendMessage(Text.of("/econ remove: Remove points from a player's wallet"), false);
+        context.getSource().sendFeedback(Text.of("/econ remove: Remove points from a player's wallet"), false);
         return 1;
     }
 
@@ -56,7 +56,7 @@ public class WbsmpCommandHandler {
         for (GameProfile target : targets) {
             int amount = context.getArgument("amount", Integer.class);
             EconomyManager.getInstance().removeBalance(target.getId(), amount);
-            context.getSource().getPlayer().sendMessage(Text.of("Removed " + amount + " points from " + target.getName()));
+            context.getSource().sendFeedback(Text.of("Removed " + amount + " points from " + target.getName()), true);
         }
         return 1;
     }
@@ -64,6 +64,7 @@ public class WbsmpCommandHandler {
     public static int setPointsPerBlock(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         WorldBorderHelper.setPointsPerBlock(context.getArgument("points", Double.class));
         WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
+        context.getSource().sendFeedback(Text.of("PointsPerBlock updated."), true);
         return 1;
     }
 
@@ -74,6 +75,7 @@ public class WbsmpCommandHandler {
 
     public static int setDeathLoss(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         EconomyManager.POINT_LOSS = context.getArgument("loss", Double.class);
+        context.getSource().sendFeedback(Text.of("POINT_LOSS updated."), true);
         return 1;
     }
 }
