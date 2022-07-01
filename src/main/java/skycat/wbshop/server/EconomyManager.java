@@ -1,5 +1,6 @@
 package skycat.wbshop.server;
 
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import skycat.wbshop.WBShopServer;
 
@@ -16,8 +17,8 @@ import java.util.UUID;
  */
 public class EconomyManager {
     public static final File SAVE_FILE = new File("WBShopEconomyManagerSave.txt");
-    public HashMap<UUID, @NotNull Integer> wallets;
     public static double POINT_LOSS = 0.1; // Default lose 10% of points on death
+    public HashMap<UUID, @NotNull Integer> wallets;
 
     /**
      * Get the instance of this class that is initialized by {@link WBShopServer}.
@@ -76,23 +77,14 @@ public class EconomyManager {
         }
         wallets.put(uuid, wallets.get(uuid) + amount);
         return wallets.get(uuid);
-
     }
 
-    /**
-     * Makes a new wallet and sets the balance to zero.
-     *
-     * @param uuid The {@link UUID} to associate with the wallet
-     * @return {@code true} if the wallet was initialized, {@code false} if the wallet already existed (and so was not initialized)
-     */
-    public boolean initializeWallet(UUID uuid) {
-        if (isValidEntry(uuid)) {
-            WBShopServer.LOGGER.warn("initializeWallet was called, but the wallet for uuid " + uuid.toString() + " is already initialized!");
-            return false;
-        } else {
-            wallets.put(uuid, 0);
-            return true;
-        }
+    public int addBalance(ServerPlayerEntity player, int amount) {
+        return addBalance(player.getUuid(), amount);
+    }
+
+    public int getBalance(ServerPlayerEntity player) {
+        return getBalance(player.getUuid());
     }
 
     /**
@@ -118,12 +110,36 @@ public class EconomyManager {
         return total;
     }
 
+    public boolean hasWallet(ServerPlayerEntity player) {
+        return isValidEntry(player.getUuid());
+    }
+
+    /**
+     * Makes a new wallet and sets the balance to zero.
+     *
+     * @param uuid The {@link UUID} to associate with the wallet
+     * @return {@code true} if the wallet was initialized, {@code false} if the wallet already existed (and so was not initialized)
+     */
+    public boolean initializeWallet(UUID uuid) {
+        if (isValidEntry(uuid)) {
+            WBShopServer.LOGGER.warn("initializeWallet was called, but the wallet for uuid " + uuid.toString() + " is already initialized!");
+            return false;
+        } else {
+            wallets.put(uuid, 0);
+            return true;
+        }
+    }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isValidEntry(UUID key) {
         if (!wallets.containsKey(key)) { // Separated into different cases for easy modification later
             return false; // UUID key is not found
         }
         return wallets.get(key) != null; // The value should not be null.
+    }
+
+    public void onPlayerDeath(UUID uuid) {
+        removeBalance(uuid, (int) (getBalance(uuid) * (POINT_LOSS))); // Lose POINT_LOSS * balance points on death (ex if POINT_LOSS = 0.1, lose 10% of points on death)
     }
 
     /**
@@ -140,6 +156,10 @@ public class EconomyManager {
         }
         wallets.put(uuid, wallets.get(uuid) - amount);
         return wallets.get(uuid);
+    }
+
+    public int removeBalance(ServerPlayerEntity player, int amount) {
+        return removeBalance(player.getUuid(), amount);
     }
 
     /**
@@ -176,9 +196,5 @@ public class EconomyManager {
         addBalance(to, amount);
 
         return true;
-    }
-
-    public void onPlayerDeath(UUID uuid) {
-        removeBalance(uuid, (int) (getBalance(uuid) * (POINT_LOSS))); // Lose POINT_LOSS * balance points on death (ex if POINT_LOSS = 0.1, lose 10% of points on death)
     }
 }
