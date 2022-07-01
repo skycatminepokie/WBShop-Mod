@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 import skycat.wbshop.WBShopServer;
 import skycat.wbshop.server.EconomyManager;
 
@@ -33,6 +34,8 @@ public class PayCommandHandler {
         } else {
             throw new SimpleCommandExceptionType(new LiteralMessage("You don't have enough points for that!")).create();
         }
+
+        context.getSource().sendFeedback(Text.of("Successfully transferred " + amount + " points."), false);
 
         return 1;
     }
