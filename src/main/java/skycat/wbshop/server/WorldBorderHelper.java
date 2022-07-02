@@ -6,9 +6,9 @@ public class WorldBorderHelper {
     public static double POINTS_PER_BLOCK = 3.0; // Default 3 points per block.
 
     private static double calcDesiredBorderWidth(EconomyManager economyManager) {
-        double blocks = economyManager.getTotalBalance() / POINTS_PER_BLOCK; // 1 block per 3 points TODO: Currently hardcoded, want to change that.
+        double blocks = economyManager.getTotalBalance() / POINTS_PER_BLOCK;
         if (blocks > 9) {
-            return Math.sqrt(blocks);
+            return blocks;
         } else {
             return 3; // Must be at least 3 blocks wide
         }
