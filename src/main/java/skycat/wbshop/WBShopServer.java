@@ -38,7 +38,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         WBShopServer.LOGGER.info("WBShop Initializing (Server)");
         ServerLifecycleEvents.SERVER_STOPPING.register(this);
         ServerLifecycleEvents.SERVER_STARTED.register(this);
-        DonationManager.initializePointValues();
+        DonationManager.reloadPointValues();
         registerCommands();
         WorldBorderHelper.setPointsPerBlock(SETTINGS.pointsPerBlock);
         WorldBorderHelper.updateWorldBorder(ECONOMY_MANAGER);
