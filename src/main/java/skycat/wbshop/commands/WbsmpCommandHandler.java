@@ -29,6 +29,7 @@ public class WbsmpCommandHandler {
             EconomyManager.getInstance().addBalance(target.getId(), amount);
             context.getSource().sendFeedback(Text.of("Added " + amount + " points to " + target.getName()), false);
         }
+        WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
         return 1;
     }
 
@@ -58,6 +59,7 @@ public class WbsmpCommandHandler {
             EconomyManager.getInstance().removeBalance(target.getId(), amount);
             context.getSource().sendFeedback(Text.of("Removed " + amount + " points from " + target.getName()), true);
         }
+        WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
         return 1;
     }
 

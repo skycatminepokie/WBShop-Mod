@@ -55,10 +55,10 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         try {
             boolean success = ECONOMY_MANAGER.saveToFile();
             if (!success) {
-                WBShopServer.LOGGER.error("ERROR: Failed to save economy manager to file!");
+                WBShopServer.LOGGER.error("Failed to save economy manager to file!");
             }
         } catch (FileNotFoundException e) {
-            WBShopServer.LOGGER.error("ERROR: Failed to save economy manager to file! Printing stacktrace.");
+            WBShopServer.LOGGER.error("Failed to save economy manager to file! Printing stacktrace.");
             e.printStackTrace();
             // TODO: Maybe print out alt version of econ manager so progress isn't lost?
         }
