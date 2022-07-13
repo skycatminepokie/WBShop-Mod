@@ -10,8 +10,6 @@ import net.minecraft.screen.ScreenHandlerType;
 
 @Environment(EnvType.SERVER)
 public class DonateScreenHandler extends GenericContainerScreenHandler {
-
-
     public DonateScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory, int rows) {
         super(type, syncId, playerInventory, inventory, rows);
     }

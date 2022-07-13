@@ -10,14 +10,14 @@ import java.util.UUID;
 /**
  * An object representing an offer made to buy some of an item.
  */
-public class Offer {
+public class Offer { // TODO: Test
     private static long lastId = -1;
     @Getter private final long id;
     @Getter private final UUID owner;
     @Getter private final Item item;
-    @Getter private int itemsRequested;
+    @Getter private final int itemsRequested;
     @Getter private int itemsFilled = 0;
-    @Getter private double pointsPerItem;
+    @Getter private final double pointsPerItem;
     @Getter private final LocalDateTime timeCreated;
     @Getter private boolean isFilled = false;
 

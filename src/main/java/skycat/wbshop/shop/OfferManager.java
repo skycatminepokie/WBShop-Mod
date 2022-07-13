@@ -2,7 +2,6 @@ package skycat.wbshop.shop;
 
 import lombok.Getter;
 import net.minecraft.item.Item;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.CheckForNull;
 import java.util.ArrayList;
@@ -11,24 +10,13 @@ import java.util.List;
 /**
  * A class to manage, keep track of, and search through {@link Offer} objects.
  */
-public class OfferManager {
+public class OfferManager { // TODO: Test
     @Getter
     private static ArrayList<Offer> offerList;
 
-    public static void registerOffer(Offer offer) {
-        offerList.add(offer);
-    }
-
-    public static void registerOffers(Offer... offers) {
-        offerList.addAll(List.of(offers));
-    }
-
-    public static void registerOffers(ArrayList<Offer> offers) {
-        offerList.addAll(offers);
-    }
-
     /**
      * Gets the highest-paying {@link Offer} for an {@link Item}
+     *
      * @param item The type of item the offer should be for.
      * @return The highest-paying {@link Offer}, or {@code null} if there is no valid offer.
      */
@@ -44,6 +32,18 @@ public class OfferManager {
         }
 
         return topOffer;
+    }
+
+    public static void registerOffer(Offer offer) {
+        offerList.add(offer);
+    }
+
+    public static void registerOffers(ArrayList<Offer> offers) {
+        offerList.addAll(offers);
+    }
+
+    public static void registerOffers(Offer... offers) {
+        offerList.addAll(List.of(offers));
     }
 
     /*
