@@ -1,6 +1,7 @@
 package skycat.wbshop.commands;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.GameProfileArgumentType;
@@ -17,19 +18,46 @@ public class WbsmpCommandHandler {
         return 1;
     }
 
-    public static int econAdd(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendFeedback(Text.of("/econ add: Add points to a player's wallet"), false);
-        return 1;
+    /**
+     * Remove points from players through a command
+     * @param context The command context.
+     * @param update Whether to update the border after removing points.
+     * @return The number of players affected.
+     */
+    public static int removePoints(CommandContext<ServerCommandSource> context, boolean update) throws CommandSyntaxException {
+        Collection<GameProfile> targets = GameProfileArgumentType.getProfileArgument(context, "player");
+        for (GameProfile target : targets) {
+            int amount = context.getArgument("amount", Integer.class);
+            EconomyManager.getInstance().removeBalance(target.getId(), amount);
+            context.getSource().sendFeedback(Text.of("Removed " + amount + " points from " + target.getName()), true);
+        }
+        if (update) {
+            WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
+        }
+        return targets.size();
     }
 
-    public static int econAddWithArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    /**
+     * Add points to players through a command.
+     * @param context The command context.
+     * @param update Whether to update the border after the operation.
+     * @return The number of players affected.
+     */
+    public static int addPoints(CommandContext<ServerCommandSource> context, boolean update) throws CommandSyntaxException {
         Collection<GameProfile> targets = GameProfileArgumentType.getProfileArgument(context, "player");
         for (GameProfile target : targets) {
             int amount = context.getArgument("amount", Integer.class);
             EconomyManager.getInstance().addBalance(target.getId(), amount);
             context.getSource().sendFeedback(Text.of("Added " + amount + " points to " + target.getName()), false);
         }
-        WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
+        if (update) {
+            WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
+        }
+        return targets.size();
+    }
+
+    public static int econAdd(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        context.getSource().sendFeedback(Text.of("/econ add: Add points to a player's wallet"), false);
         return 1;
     }
 
@@ -52,16 +80,6 @@ public class WbsmpCommandHandler {
         return 1;
     }
 
-    public static int econRemoveWithArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        Collection<GameProfile> targets = GameProfileArgumentType.getProfileArgument(context, "player");
-        for (GameProfile target : targets) {
-            int amount = context.getArgument("amount", Integer.class);
-            EconomyManager.getInstance().removeBalance(target.getId(), amount);
-            context.getSource().sendFeedback(Text.of("Removed " + amount + " points from " + target.getName()), true);
-        }
-        WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
-        return 1;
-    }
 
     public static int setPointsPerBlock(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         WorldBorderHelper.setPointsPerBlock(context.getArgument("points", Double.class));
