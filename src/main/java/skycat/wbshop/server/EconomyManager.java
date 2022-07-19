@@ -16,7 +16,7 @@ import java.util.UUID;
  * A class to manage the balances of all players.
  * Initialized in {@link WBShopServer#onInitializeServer()}
  */
-public class EconomyManager {
+public class EconomyManager { // TODO: Ensure all wallets are always initialized
     public static final File SAVE_FILE = new File("WBShopEconomyManagerSave.txt");
     public static double POINT_LOSS = 0.1; // Default lose 10% of points on death
     public HashMap<UUID, @NotNull Integer> wallets;
@@ -190,11 +190,12 @@ public class EconomyManager {
      */
     public boolean transferBalance(UUID from, UUID to, int amount) {
         if (!isValidEntry(from)) {
-            throw new IllegalArgumentException("\"from\" UUID is invalid");
+            throw new IllegalArgumentException("\"from\" UUID is invalid (or wallet is not initialized)");
         }
         if (!isValidEntry(to)) {
-            throw new IllegalArgumentException("\"to\" UUID is invalid");
+            throw new IllegalArgumentException("\"to\" UUID is invalid (or wallet is not initialized)");
         }
+
 
         removeBalance(from, amount);
         addBalance(to, amount);
