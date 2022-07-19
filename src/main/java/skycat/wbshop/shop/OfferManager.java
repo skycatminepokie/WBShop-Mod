@@ -12,10 +12,10 @@ import java.util.List;
  */
 public class OfferManager { // TODO: Test
     @Getter
-    private static ArrayList<Offer> offerList;
+    private static ArrayList<Offer> offerList = new ArrayList<>(); // TODO: Proper loading system
 
     /**
-     * Gets the highest-paying {@link Offer} for an {@link Item}
+     * Gets the highest-paying unfilled {@link Offer} for an {@link Item}
      *
      * @param item The type of item the offer should be for.
      * @return The highest-paying {@link Offer}, or {@code null} if there is no valid offer.
@@ -26,7 +26,7 @@ public class OfferManager { // TODO: Test
 
         for (Offer offer : offerList) {
             // Taking advantage of lazy boolean ops, we won't attempt to access methods of topOffer if it is null
-            if (offer.getItem().equals(item) && (topOffer == null || (offer.getPointsPerItem() > topOffer.getPointsPerItem()))) {
+            if (offer.getItem().equals(item) && (topOffer == null || (offer.getPointsPerItem() > topOffer.getPointsPerItem())) && !offer.isFilled()) {
                 topOffer = offer;
             }
         }

@@ -1,6 +1,7 @@
 package skycat.wbshop;
 
 import com.google.gson.Gson;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -9,6 +10,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.command.argument.GameProfileArgumentType;
+import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,6 +149,21 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
             dispatcher.register(literal("offer")
                     .then(literal("list")
                             .executes(OfferCommandHandler::list)
+                    )
+                    .then(literal("create")
+                            .then(argument("item", ItemStackArgumentType.itemStack(commandRegistryAccess))
+                                    .then(argument("pointsPerItem", DoubleArgumentType.doubleArg(0))
+                                            .then(argument("itemCount", IntegerArgumentType.integer(1))
+                                                    .executes(context -> OfferCommandHandler.createWithArgs(
+                                                            context.getSource(),
+                                                            ItemStackArgumentType.getItemStackArgument(context, "item").getItem(),
+                                                            DoubleArgumentType.getDouble(context, "pointsPerItem"),
+                                                            IntegerArgumentType.getInteger(context, "itemCount")
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
                     )
             );
         });
