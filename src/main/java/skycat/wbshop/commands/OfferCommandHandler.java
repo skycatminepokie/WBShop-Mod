@@ -50,4 +50,8 @@ public class OfferCommandHandler {
 
         return Command.SINGLE_SUCCESS;
     }
+
+    public static int claim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        return 1; // TODO
+    }
 }

@@ -1,5 +1,6 @@
 package skycat.wbshop.server;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import skycat.wbshop.WBShopServer;
@@ -79,7 +80,7 @@ public class EconomyManager {
         return wallets.get(uuid);
     }
 
-    public int addBalance(ServerPlayerEntity player, int amount) {
+    public int addBalance(PlayerEntity player, int amount) {
         return addBalance(player.getUuid(), amount);
     }
 

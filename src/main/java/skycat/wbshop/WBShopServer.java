@@ -165,6 +165,12 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                     )
                             )
                     )
+                    .then(literal("claim")
+                            .executes(OfferCommandHandler::claim)
+                    )
+            );
+            dispatcher.register(literal("sell")
+                    .executes(SellCommandHandler::sell)
             );
         });
     }

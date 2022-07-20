@@ -81,4 +81,12 @@ public class Offer { // TODO: Test
             }
         }
     }
+
+    /**
+     * Get the number of items that are still needed to fill the offer.
+     * @return The number of items that are still needed to fill the offer.
+     */
+    public int getUnfilled() {
+        return itemsRequested - itemsFilled;
+    }
 }
