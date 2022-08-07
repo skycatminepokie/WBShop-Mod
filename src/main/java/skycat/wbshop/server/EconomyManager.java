@@ -141,6 +141,9 @@ public class EconomyManager { // TODO: Ensure all wallets are always initialized
 
     public void onPlayerDeath(ServerPlayerEntity player) {
         UUID uuid = player.getUuid();
+        if (!isValidEntry(uuid)) {
+            this.initializeWallet(uuid);
+        }
         int pointsLost = (int) (getBalance(uuid) * (POINT_LOSS));  // Lose POINT_LOSS * balance points on death (ex if POINT_LOSS = 0.1, lose 10% of points on death)
         int pointsLeft = removeBalance(uuid, pointsLost);
         player.sendMessage(Text.of("You died and lost " + pointsLost + (pointsLost == 1 ? " point" : " points") + "! You have " + pointsLeft + (pointsLeft == 1 ? " point" : " points") + " left."));
