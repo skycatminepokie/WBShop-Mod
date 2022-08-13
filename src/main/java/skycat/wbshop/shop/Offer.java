@@ -11,12 +11,30 @@ import java.util.UUID;
  * An object representing an offer made to buy some of an item.
  */
 public class Offer { // TODO: Test
-    private static long lastId = -1;
+    private static long lastId = WBShopServer.SETTINGS.getLastOfferId();
+    /**
+     * A unique ID for the offer
+     */
     @Getter private final long id;
+    /**
+     * The creator of the offer
+     */
     @Getter private final UUID owner;
+    /**
+     * The type of item that the offer can be satisfied with
+     */
     @Getter private final Item item;
+    /**
+     * The number of items requested by the creator of the offer.
+     */
     @Getter private final int itemsRequested;
+    /**
+     * The current total of items collected to fill the offer
+     */
     @Getter private int itemsFilled = 0;
+    /**
+     * The number of points offered by the owner per item.
+     */
     @Getter private final double pointsPerItem;
     @Getter private final LocalDateTime timeCreated;
     @Getter private boolean isFilled = false;
@@ -49,7 +67,7 @@ public class Offer { // TODO: Test
      * @return The next unused offer id.
      */
     private static long nextId() {
-        return (++lastId);
+        return ++WBShopServer.SETTINGS.lastOfferId; // TODO: Probably should encapsulate the offer id better
     }
 
     /**

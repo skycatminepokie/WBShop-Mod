@@ -1,17 +1,25 @@
 package skycat.wbshop;
 
+import skycat.wbshop.shop.Offer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Settings {
-    public static final String SETTINGS_FILE_NAME = "wbshop_settings.txt";
+    public static String SETTINGS_FILE_NAME = "wbshop_settings.txt"; // TODO: Updating from pre-offer versions breaks everything. This is not ideal.
     public double pointsPerBlock = 3;
+    public ArrayList<Offer> offerList;
+    public long lastOfferId = -1;
 
-    private Settings() {}
+    private Settings() {
+        offerList = new ArrayList<Offer>();
+    }
 
     public static Settings load() {
+        // TODO: Handle loading errors and inconsistencies caused by crashes and other things
         Settings loaded;
         Scanner scanner;
         try {
@@ -25,6 +33,10 @@ public class Settings {
         return loaded;
     }
 
+    public long getLastOfferId() {
+        return lastOfferId;
+    }
+
     public void save() {
         try {
             PrintWriter printWriter = new PrintWriter(SETTINGS_FILE_NAME);
@@ -34,5 +46,9 @@ public class Settings {
             WBShopServer.LOGGER.error("Failed to save settings. Dumping info:\npointsPerBlock:" + pointsPerBlock);
             throw new RuntimeException(e);
         }
+    }
+
+    public ArrayList<Offer> getOfferList() {
+        return offerList;
     }
 }

@@ -1,6 +1,5 @@
 package skycat.wbshop.shop;
 
-import lombok.Getter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,8 +16,9 @@ import java.util.List;
  * A class to manage, keep track of, and search through {@link Offer} objects.
  */
 public class OfferManager { // TODO: Test
-    @Getter
-    private static ArrayList<Offer> offerList = new ArrayList<>(); // TODO: Proper loading system
+    public static ArrayList<Offer> getOfferList() {
+        return WBShopServer.SETTINGS.getOfferList();
+    }
 
     /**
      * Gets the highest-paying unfilled {@link Offer} for an {@link Item}
@@ -30,7 +30,7 @@ public class OfferManager { // TODO: Test
     public static Offer getTopOffer(Item item) {
         Offer topOffer = null;
 
-        for (Offer offer : offerList) {
+        for (Offer offer : getOfferList()) {
             // Taking advantage of lazy boolean ops, we won't attempt to access methods of topOffer if it is null
             if (offer.getItem().equals(item) && (topOffer == null || (offer.getPointsPerItem() > topOffer.getPointsPerItem())) && !offer.isFilled()) {
                 topOffer = offer;
@@ -41,15 +41,15 @@ public class OfferManager { // TODO: Test
     }
 
     public static void registerOffer(Offer offer) {
-        offerList.add(offer);
+        getOfferList().add(offer);
     }
 
     public static void registerOffers(ArrayList<Offer> offers) {
-        offerList.addAll(offers);
+        getOfferList().addAll(offers);
     }
 
     public static void registerOffers(Offer... offers) {
-        offerList.addAll(List.of(offers));
+        getOfferList().addAll(List.of(offers));
     }
 
     /**
@@ -66,7 +66,7 @@ public class OfferManager { // TODO: Test
         }
         if (topOffer == null) { // There are no remaining offers for the item
             // Give the player their unsold items back
-            returnItems(itemType, sellAmount, player);
+            giveItems(itemType, sellAmount, player);
             return 0;
         }
 
@@ -100,12 +100,12 @@ public class OfferManager { // TODO: Test
     }
 
     /**
-     * Attempts to return items to a player's inventory. Drops them on the ground when the player has no space left.
-     * @param itemType The type of item to return.
-     * @param amount The number of items to return (must be positive).
-     * @param player The player to return the items to.
+     * Attempts to put items in a player's inventory. Drops them on the ground when the player has no space left.
+     * @param itemType The type of item to give.
+     * @param amount The number of items to give (must be positive).
+     * @param player The player to give the items to.
      */
-    public static void returnItems(Item itemType, int amount, PlayerEntity player) {
+    public static void giveItems(Item itemType, int amount, PlayerEntity player) {
         while (amount >= itemType.getMaxCount()) {
             player.getInventory().offerOrDrop(new ItemStack(itemType, itemType.getMaxCount()));
             amount -= itemType.getMaxCount();
@@ -115,4 +115,15 @@ public class OfferManager { // TODO: Test
         }
     }
 
+    public static void claimPurchases(PlayerEntity player) {
+        // TODO
+        getOfferList().forEach(offer -> {
+            if (offer.isFilled() && (offer.getOwner().equals(player.getUuid()))) { // TODO: Potentially optimize? I don't know which check is faster in most cases.
+                giveItems(offer.getItem(), offer.getItemsRequested(), player);
+                // Logging UUID instead of name so that it is harder for server admins to get potential "spoilers" if they are trying to avoid them. May add an option to change this in the future.
+                WBShopServer.LOGGER.info("Offer " + offer.getId() + " for " + offer.getItemsRequested() + "x " + offer.getItem().getName().getString() + " claimed by player with UUID " + player.getUuid());
+                getOfferList().remove(offer); // TODO: I think this is showing an error to the player because of how it is being deleted.
+            }
+        });
+    }
 }
