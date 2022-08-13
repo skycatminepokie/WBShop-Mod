@@ -23,7 +23,7 @@ import skycat.wbshop.server.WorldBorderHelper;
 public class WithdrawCommandHandler {
 
     public static int withdrawCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        // TODO: Tell the player the usage
+        context.getSource().sendFeedback(Text.of("Use /withdraw [amount] to turn your points into vouchers. Vouchers do not count towards the world border."), false);
         return 1;
     }
 

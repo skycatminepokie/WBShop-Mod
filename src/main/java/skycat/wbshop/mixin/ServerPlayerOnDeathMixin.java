@@ -11,7 +11,7 @@ import skycat.wbshop.server.EconomyManager;
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerOnDeathMixin {
     @Inject(at = @At("HEAD"), method = "onDeath")
-    public void onDeathMixin(DamageSource damageSource, CallbackInfo info) { // TODO: Debug, double-check, and test
+    public void onDeathMixin(DamageSource damageSource, CallbackInfo info) {
         EconomyManager.getInstance().onPlayerDeath(((ServerPlayerEntity)(Object)this).getUuid());
     }
 

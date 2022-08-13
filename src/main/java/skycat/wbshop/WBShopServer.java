@@ -27,7 +27,6 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 @Environment(EnvType.SERVER)
 public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping, ServerLifecycleEvents.ServerStarted { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
-
     public static final Gson GSON = new Gson();
     public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration

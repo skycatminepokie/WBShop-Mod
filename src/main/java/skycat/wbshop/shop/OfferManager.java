@@ -52,12 +52,6 @@ public class OfferManager { // TODO: Test
         offerList.addAll(List.of(offers));
     }
 
-    /*
-    public static Offer getTopOffer() {
-
-    }
-    */
-
     /**
      * Tries to fill the best offer for the type of item. Returns unsold items to the player.
      * @param itemType The type of item that is being sold.
