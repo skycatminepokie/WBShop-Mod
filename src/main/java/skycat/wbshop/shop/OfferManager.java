@@ -54,7 +54,8 @@ public class OfferManager {
 
     /**
      * Tries to fill the best offer for the type of item. Returns unsold items to the player.
-     * @param itemType The type of item that is being sold.
+     *
+     * @param itemType   The type of item that is being sold.
      * @param sellAmount The number of items being sold.
      * @return The number of points the sale was worth.
      */
@@ -96,14 +97,15 @@ public class OfferManager {
     }
 
     public static void sellScreenClosing(SellScreenHandler handler, PlayerEntity player) {
-        EconomyManager.getInstance().addBalance(player, sellOrReturn(handler.getStacks().subList(0,54), player)); // Magic numbers 0 and 54: Selling slots 0-53 (everything in the double chest)
+        EconomyManager.getInstance().addBalance(player, sellOrReturn(handler.getStacks().subList(0, 54), player)); // Magic numbers 0 and 54: Selling slots 0-53 (everything in the double chest)
     }
 
     /**
      * Attempts to put items in a player's inventory. Drops them on the ground when the player has no space left.
+     *
      * @param itemType The type of item to give.
-     * @param amount The number of items to give (must be positive).
-     * @param player The player to give the items to.
+     * @param amount   The number of items to give (must be positive).
+     * @param player   The player to give the items to.
      */
     public static void giveItems(Item itemType, int amount, PlayerEntity player) {
         while (amount >= itemType.getMaxCount()) {

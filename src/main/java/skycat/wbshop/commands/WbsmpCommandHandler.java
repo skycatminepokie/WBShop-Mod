@@ -19,8 +19,9 @@ public class WbsmpCommandHandler {
 
     /**
      * Remove points from players through a command
+     *
      * @param context The command context.
-     * @param update Whether to update the border after removing points.
+     * @param update  Whether to update the border after removing points.
      * @return The number of players affected.
      */
     public static int removePoints(CommandContext<ServerCommandSource> context, boolean update) throws CommandSyntaxException {
@@ -38,8 +39,9 @@ public class WbsmpCommandHandler {
 
     /**
      * Add points to players through a command.
+     *
      * @param context The command context.
-     * @param update Whether to update the border after the operation.
+     * @param update  Whether to update the border after the operation.
      * @return The number of players affected.
      */
     public static int addPoints(CommandContext<ServerCommandSource> context, boolean update) throws CommandSyntaxException {

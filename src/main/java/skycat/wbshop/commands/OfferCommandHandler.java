@@ -15,14 +15,17 @@ import skycat.wbshop.shop.OfferManager;
 
 public class OfferCommandHandler {
     /**
-     * The command /offer list
-     * @param context
-     * @return
-     * @throws CommandSyntaxException
+     * Attempts to claim filled offers owned by the player.
+     *
+     * @param context The CommandContext. Must be a player.
+     * @return 1 for success.
+     * @throws CommandSyntaxException If the source is not a player
      */
-    public static int list(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        // TODO
-        return 0;
+    public static int claim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        // TODO: When successfully claiming an offer, this always gives an error message to the player. Maybe it's because we're deleting the offer as it is being accessed?
+        OfferManager.claimPurchases(context.getSource().getPlayerOrThrow());
+        context.getSource().sendFeedback(Text.of("Successfully claimed your filled offers."), false);
+        return 1; // TODO: Maybe return number of purchases or number of items claimed?
     }
 
     public static int create(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -50,15 +53,14 @@ public class OfferCommandHandler {
     }
 
     /**
-     * Attempts to claim filled offers owned by the player.
-     * @param context The CommandContext. Must be a player.
-     * @return 1 for success.
-     * @throws CommandSyntaxException If the source is not a player
+     * The command /offer list
+     *
+     * @param context The command context
+     * @return Success
+     * @throws CommandSyntaxException
      */
-    public static int claim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        // TODO: When successfully claiming an offer, this always gives an error message to the player. Maybe it's because we're deleting the offer as it is being accessed?
-        OfferManager.claimPurchases(context.getSource().getPlayerOrThrow());
-        context.getSource().sendFeedback(Text.of("Successfully claimed your filled offers."), false);
-        return 1; // TODO: Maybe return number of purchases or number of items claimed?
+    public static int list(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        // TODO
+        return 0;
     }
 }

@@ -38,9 +38,10 @@ public class Offer {
 
     /**
      * Create a new {@link Offer}.
-     * @param owner The creator of the offer.
-     * @param item The item requested.
-     * @param pointsPerItem The points offered per item. Must be greater than 0.
+     *
+     * @param owner          The creator of the offer.
+     * @param item           The item requested.
+     * @param pointsPerItem  The points offered per item. Must be greater than 0.
      * @param itemsRequested The number of items wanted. Must be greater than 0.
      * @throws IllegalArgumentException If {@code pointsPerItem <= 0} or {@code itemsRequested <= 0}.
      */
@@ -60,6 +61,7 @@ public class Offer {
 
     /**
      * Get the next unused offer id.
+     *
      * @return The next unused offer id.
      */
     private static long nextId() {
@@ -68,6 +70,7 @@ public class Offer {
 
     /**
      * Attempt to exchange items for points through the offer.
+     *
      * @param numOfItems The number items that are being sold to fill the offer
      * @return The number of points to be paid for the offer.
      * @throws IllegalArgumentException If {@code numOfItems} is greater than the unfilled volume of the {@link Offer}.
@@ -84,6 +87,7 @@ public class Offer {
     /**
      * Update the number of items exchanged through the offer.
      * Does not ensure validity! Use {@link Offer#tryToFill(int)} to do this.
+     *
      * @param numOfItems The number of newly exchanged items.
      */
     private void fill(int numOfItems) {
@@ -98,6 +102,7 @@ public class Offer {
 
     /**
      * Get the number of items that are still needed to fill the offer.
+     *
      * @return The number of items that are still needed to fill the offer.
      */
     public int getUnfilled() {

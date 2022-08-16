@@ -12,7 +12,7 @@ import skycat.wbshop.server.EconomyManager;
 public abstract class ServerPlayerOnDeathMixin {
     @Inject(at = @At("HEAD"), method = "onDeath")
     public void onDeathMixin(DamageSource damageSource, CallbackInfo info) {
-        EconomyManager.getInstance().onPlayerDeath(((ServerPlayerEntity)(Object)this));
+        EconomyManager.getInstance().onPlayerDeath(((ServerPlayerEntity) (Object) this));
     }
 
 

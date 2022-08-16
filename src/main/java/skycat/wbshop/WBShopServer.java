@@ -159,10 +159,10 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                     .then(argument("pointsPerItem", DoubleArgumentType.doubleArg(0))
                                             .then(argument("itemCount", IntegerArgumentType.integer(1))
                                                     .executes(context -> OfferCommandHandler.createWithArgs(
-                                                            context.getSource(),
-                                                            ItemStackArgumentType.getItemStackArgument(context, "item").getItem(),
-                                                            DoubleArgumentType.getDouble(context, "pointsPerItem"),
-                                                            IntegerArgumentType.getInteger(context, "itemCount")
+                                                                    context.getSource(),
+                                                                    ItemStackArgumentType.getItemStackArgument(context, "item").getItem(),
+                                                                    DoubleArgumentType.getDouble(context, "pointsPerItem"),
+                                                                    IntegerArgumentType.getInteger(context, "itemCount")
                                                             )
                                                     )
                                             )

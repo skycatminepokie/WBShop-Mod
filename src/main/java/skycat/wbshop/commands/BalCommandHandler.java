@@ -10,7 +10,9 @@ import static skycat.wbshop.WBShopServer.ECONOMY_MANAGER;
 
 public class BalCommandHandler {
 
-    /** Tells the player their current balance
+    /**
+     * Tells the player their current balance
+     *
      * @return 0: Initialized a new wallet. 1: Success
      */
     public static int balCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
