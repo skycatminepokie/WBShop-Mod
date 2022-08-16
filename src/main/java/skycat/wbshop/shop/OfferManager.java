@@ -116,13 +116,15 @@ public class OfferManager {
     }
 
     public static void claimPurchases(PlayerEntity player) {
+        ArrayList<Offer> toDelete = new ArrayList<>();
         getOfferList().forEach(offer -> {
             if (offer.isFilled() && (offer.getOwner().equals(player.getUuid()))) { // TODO: Potentially optimize? I don't know which check is faster in most cases.
                 giveItems(offer.getItem(), offer.getItemsRequested(), player);
                 // Logging UUID instead of name so that it is harder for server admins to get potential "spoilers" if they are trying to avoid them. May add an option to change this in the future.
                 WBShopServer.LOGGER.info("Offer " + offer.getId() + " for " + offer.getItemsRequested() + "x " + offer.getItem().getName().getString() + " claimed by player with UUID " + player.getUuid());
-                getOfferList().remove(offer); // TODO: I think this is showing an error to the player because of how it is being deleted.
+                toDelete.add(offer);
             }
         });
+        getOfferList().removeAll(toDelete);
     }
 }
