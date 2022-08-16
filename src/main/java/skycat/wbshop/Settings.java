@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Settings {
-    public static String SETTINGS_FILE_NAME = "wbshop_settings.txt"; // TODO: Updating from pre-offer versions might break everything. This is not ideal.
+    public static final File SETTINGS_FILE = new File("wbshop_settings.txt"); // TODO: Updating from pre-offer versions might break everything. This is not ideal.
     public double pointsPerBlock = 3;
-    public ArrayList<Offer> offerList;
+    public ArrayList<Offer> offerList = new ArrayList<Offer>();
     public long lastOfferId = -1;
 
     private Settings() {
-        offerList = new ArrayList<Offer>();
+
     }
 
     public static Settings load() {
@@ -23,8 +23,13 @@ public class Settings {
         Settings loaded;
         Scanner scanner;
         try {
-            scanner = new Scanner(new File(SETTINGS_FILE_NAME));
-            loaded = WBShopServer.GSON.fromJson(scanner.nextLine(), Settings.class);
+            scanner = new Scanner(SETTINGS_FILE);
+            if (scanner.hasNextLine()) {
+                loaded = WBShopServer.GSON.fromJson(scanner.nextLine(), Settings.class);
+            } else {
+                WBShopServer.LOGGER.warn("Failed to load settings. Creating new settings.");
+                return new Settings();
+            }
             scanner.close();
         } catch (FileNotFoundException e) {
             WBShopServer.LOGGER.warn("Failed to load settings. Creating new settings.");
@@ -39,7 +44,7 @@ public class Settings {
 
     public void save() {
         try {
-            PrintWriter printWriter = new PrintWriter(SETTINGS_FILE_NAME);
+            PrintWriter printWriter = new PrintWriter(SETTINGS_FILE);
             printWriter.println(WBShopServer.GSON.toJson(this));
             printWriter.close();
         } catch (FileNotFoundException e) {

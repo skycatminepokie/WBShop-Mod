@@ -4,14 +4,12 @@ import lombok.Getter;
 import net.minecraft.item.Item;
 import skycat.wbshop.WBShopServer;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
  * An object representing an offer made to buy some of an item.
  */
 public class Offer {
-    private static final long lastId = WBShopServer.SETTINGS.getLastOfferId();
     /**
      * A unique ID for the offer
      */
@@ -23,7 +21,7 @@ public class Offer {
     /**
      * The type of item that the offer can be satisfied with
      */
-    @Getter private final Item item;
+    @Getter private final int itemId;
     /**
      * The number of items requested by the creator of the offer.
      */
@@ -36,7 +34,6 @@ public class Offer {
      * The number of points offered by the owner per item.
      */
     @Getter private final double pointsPerItem;
-    @Getter private final LocalDateTime timeCreated;
     @Getter private boolean isFilled = false;
 
     /**
@@ -50,7 +47,7 @@ public class Offer {
     public Offer(UUID owner, Item item, double pointsPerItem, int itemsRequested) {
         this.id = Offer.nextId();
         this.owner = owner;
-        this.item = item;
+        this.itemId = Item.getRawId(item);
         if (itemsRequested <= 0) {
             throw new IllegalArgumentException("itemsRequested must be greater than 0, but got " + itemsRequested);
         }
@@ -59,7 +56,6 @@ public class Offer {
             throw new IllegalArgumentException("pointsPerItem must be greater than 0, but got " + pointsPerItem);
         }
         this.pointsPerItem = pointsPerItem;
-        this.timeCreated = LocalDateTime.now();
     }
 
     /**
@@ -106,5 +102,9 @@ public class Offer {
      */
     public int getUnfilled() {
         return itemsRequested - itemsFilled;
+    }
+
+    public Item getItem() {
+        return Item.byRawId(itemId);
     }
 }
