@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Settings {
-    public static String SETTINGS_FILE_NAME = "wbshop_settings.txt"; // TODO: Updating from pre-offer versions breaks everything. This is not ideal.
+    public static String SETTINGS_FILE_NAME = "wbshop_settings.txt"; // TODO: Updating from pre-offer versions might break everything. This is not ideal.
     public double pointsPerBlock = 3;
     public ArrayList<Offer> offerList;
     public long lastOfferId = -1;

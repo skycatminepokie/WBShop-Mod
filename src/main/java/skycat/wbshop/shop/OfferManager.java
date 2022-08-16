@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * A class to manage, keep track of, and search through {@link Offer} objects.
  */
-public class OfferManager { // TODO: Test
+public class OfferManager {
     public static ArrayList<Offer> getOfferList() {
         return WBShopServer.SETTINGS.getOfferList();
     }
@@ -116,7 +116,6 @@ public class OfferManager { // TODO: Test
     }
 
     public static void claimPurchases(PlayerEntity player) {
-        // TODO
         getOfferList().forEach(offer -> {
             if (offer.isFilled() && (offer.getOwner().equals(player.getUuid()))) { // TODO: Potentially optimize? I don't know which check is faster in most cases.
                 giveItems(offer.getItem(), offer.getItemsRequested(), player);

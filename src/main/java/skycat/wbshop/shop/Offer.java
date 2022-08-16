@@ -10,8 +10,8 @@ import java.util.UUID;
 /**
  * An object representing an offer made to buy some of an item.
  */
-public class Offer { // TODO: Test
-    private static long lastId = WBShopServer.SETTINGS.getLastOfferId();
+public class Offer {
+    private static final long lastId = WBShopServer.SETTINGS.getLastOfferId();
     /**
      * A unique ID for the offer
      */
