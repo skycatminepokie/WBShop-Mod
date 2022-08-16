@@ -12,7 +12,6 @@ import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import skycat.wbshop.WBShopServer;
 import skycat.wbshop.server.EconomyManager;
 
 import java.util.Collection;
