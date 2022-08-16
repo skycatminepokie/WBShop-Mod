@@ -1,7 +1,6 @@
 package skycat.wbshop;
 
 import com.google.gson.Gson;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -29,9 +28,9 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping, ServerLifecycleEvents.ServerStarted { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
     public static final Gson GSON = new Gson();
     public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
+    public static final Settings SETTINGS = Settings.load();
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
     public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
-    public static final Settings SETTINGS = Settings.load();
     public static MinecraftServer SERVER_INSTANCE;
 
     @Override
