@@ -1,11 +1,9 @@
 package skycat.wbshop.commands;
 
-import com.google.gson.JsonElement;
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -14,9 +12,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.NbtTextContent;
 import net.minecraft.text.Text;
-import skycat.wbshop.WBShopServer;
 import skycat.wbshop.server.EconomyManager;
 import skycat.wbshop.server.WorldBorderHelper;
 

@@ -8,8 +8,6 @@ import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import skycat.wbshop.WBShopServer;
-import skycat.wbshop.server.DonateScreenHandler;
-import skycat.wbshop.server.DonationManager;
 import skycat.wbshop.server.SellScreenHandler;
 
 public class SellCommandHandler {
@@ -17,8 +15,7 @@ public class SellCommandHandler {
         WBShopServer.LOGGER.info("Sell called by " + context.getSource().getDisplayName().getString());
         SimpleNamedScreenHandlerFactory screenHandlerFactory = new SimpleNamedScreenHandlerFactory(
                 (syncId, inv, player) -> {
-                    SellScreenHandler handler = new SellScreenHandler(ScreenHandlerType.GENERIC_9X6, syncId, inv, new SimpleInventory(54), 6); // 54 for 6 rows of 9
-                    return handler;
+                    return new SellScreenHandler(ScreenHandlerType.GENERIC_9X6, syncId, inv, new SimpleInventory(54), 6); // 54 for 6 rows of 9
                 },
                 Text.of("Sell")
         );

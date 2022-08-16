@@ -1,7 +1,6 @@
 package skycat.wbshop.commands;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.GameProfileArgumentType;

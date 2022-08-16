@@ -1,14 +1,11 @@
 package skycat.wbshop.commands;
 
-import com.ibm.icu.text.PluralFormat;
-import com.ibm.icu.text.PluralRules;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.command.argument.GameProfileArgumentType;
-import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
