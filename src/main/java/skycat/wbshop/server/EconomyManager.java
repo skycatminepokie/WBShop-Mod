@@ -2,6 +2,7 @@ package skycat.wbshop.server;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import skycat.wbshop.WBShopServer;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
  * A class to manage the balances of all players.
  * Initialized in {@link WBShopServer#onInitializeServer()}
  */
-public class EconomyManager {
+public class EconomyManager { // TODO: Ensure all wallets are always initialized
     public static final File SAVE_FILE = new File("WBShopEconomyManagerSave.txt");
     public static double POINT_LOSS = 0.1; // Default lose 10% of points on death
     public HashMap<UUID, @NotNull Integer> wallets;
@@ -139,8 +140,14 @@ public class EconomyManager {
         return wallets.get(key) != null; // The value should not be null.
     }
 
-    public void onPlayerDeath(UUID uuid) {
-        removeBalance(uuid, (int) (getBalance(uuid) * (POINT_LOSS))); // Lose POINT_LOSS * balance points on death (ex if POINT_LOSS = 0.1, lose 10% of points on death)
+    public void onPlayerDeath(ServerPlayerEntity player) {
+        UUID uuid = player.getUuid();
+        if (!isValidEntry(uuid)) {
+            this.initializeWallet(uuid);
+        }
+        int pointsLost = (int) (getBalance(uuid) * (POINT_LOSS));  // Lose POINT_LOSS * balance points on death (ex if POINT_LOSS = 0.1, lose 10% of points on death)
+        int pointsLeft = removeBalance(uuid, pointsLost);
+        player.sendMessage(Text.of("You died and lost " + pointsLost + (pointsLost == 1 ? " point" : " points") + "! You have " + pointsLeft + (pointsLeft == 1 ? " point" : " points") + " left."));
     }
 
     /**
@@ -187,11 +194,12 @@ public class EconomyManager {
      */
     public boolean transferBalance(UUID from, UUID to, int amount) {
         if (!isValidEntry(from)) {
-            throw new IllegalArgumentException("\"from\" UUID is invalid");
+            throw new IllegalArgumentException("\"from\" UUID is invalid (or wallet is not initialized)");
         }
         if (!isValidEntry(to)) {
-            throw new IllegalArgumentException("\"to\" UUID is invalid");
+            throw new IllegalArgumentException("\"to\" UUID is invalid (or wallet is not initialized)");
         }
+
 
         removeBalance(from, amount);
         addBalance(to, amount);

@@ -55,10 +55,10 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         try {
             boolean success = ECONOMY_MANAGER.saveToFile();
             if (!success) {
-                WBShopServer.LOGGER.error("ERROR: Failed to save economy manager to file!");
+                WBShopServer.LOGGER.error("Failed to save economy manager to file!");
             }
         } catch (FileNotFoundException e) {
-            WBShopServer.LOGGER.error("ERROR: Failed to save economy manager to file! Printing stacktrace.");
+            WBShopServer.LOGGER.error("Failed to save economy manager to file! Printing stacktrace.");
             e.printStackTrace();
             // TODO: Maybe print out alt version of econ manager so progress isn't lost?
         }
@@ -117,7 +117,10 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                     .then(literal("remove")
                                             .then(argument("player", GameProfileArgumentType.gameProfile())
                                                     .then(argument("amount", IntegerArgumentType.integer(0))
-                                                            .executes(WbsmpCommandHandler::econRemoveWithArgs)
+                                                            .then(literal("noUpdate")
+                                                                    .executes(context -> WbsmpCommandHandler.removePoints(context, false))
+                                                            )
+                                                            .executes(context -> WbsmpCommandHandler.removePoints(context, true))
                                                     )
                                             )
                                             .executes(WbsmpCommandHandler::econRemove)
@@ -125,7 +128,10 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                     .then(literal("add")
                                             .then(argument("player", GameProfileArgumentType.gameProfile())
                                                     .then(argument("amount", IntegerArgumentType.integer(0))
-                                                            .executes(WbsmpCommandHandler::econAddWithArgs)
+                                                            .then(literal("noUpdate")
+                                                                    .executes(context -> WbsmpCommandHandler.addPoints(context, false))
+                                                            )
+                                                            .executes(context -> WbsmpCommandHandler.addPoints(context, true))
                                                     )
                                             )
                                             .executes(WbsmpCommandHandler::econAdd)
