@@ -21,7 +21,6 @@ import java.util.UUID;
 public class PayCommandHandler {
     public static int payCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         // TODO: Placeholder
-        WBShopServer.LOGGER.info(context.getSource().getPlayer().getUuid().toString());
         return 1;
     }
 

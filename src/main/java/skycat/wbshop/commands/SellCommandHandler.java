@@ -10,20 +10,17 @@ import net.minecraft.text.Text;
 import skycat.wbshop.WBShopServer;
 import skycat.wbshop.server.DonateScreenHandler;
 import skycat.wbshop.server.DonationManager;
+import skycat.wbshop.server.SellScreenHandler;
 
-/**
- * Handles all /donate commands
- */
-public class DonateCommandHandler {
-    public static int donateCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        WBShopServer.LOGGER.info("Donate called by " + context.getSource().getDisplayName().getString());
+public class SellCommandHandler {
+    public static int sell(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        WBShopServer.LOGGER.info("Sell called by " + context.getSource().getDisplayName().getString());
         SimpleNamedScreenHandlerFactory screenHandlerFactory = new SimpleNamedScreenHandlerFactory(
                 (syncId, inv, player) -> {
-                    DonateScreenHandler handler = new DonateScreenHandler(ScreenHandlerType.GENERIC_9X6, syncId, inv, new SimpleInventory(54), 6); // 54 for 6 rows of 9
-                    DonationManager.addHandler(handler); // TODO: This might not actually be doing anything...
+                    SellScreenHandler handler = new SellScreenHandler(ScreenHandlerType.GENERIC_9X6, syncId, inv, new SimpleInventory(54), 6); // 54 for 6 rows of 9
                     return handler;
                 },
-                Text.of("Donate")
+                Text.of("Sell")
         );
         context.getSource().getPlayer().openHandledScreen(screenHandlerFactory); // Create the screen handler and get the syncId
         return 1;

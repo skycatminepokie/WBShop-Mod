@@ -1,6 +1,7 @@
 package skycat.wbshop;
 
 import com.google.gson.Gson;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -9,6 +10,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.command.argument.GameProfileArgumentType;
+import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,6 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 @Environment(EnvType.SERVER)
 public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping, ServerLifecycleEvents.ServerStarted { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
-
     public static final Gson GSON = new Gson();
     public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
@@ -150,7 +151,32 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                             .executes(WithdrawCommandHandler::withdrawCalledAmount)
                     )
             );
-
+            dispatcher.register(literal("offer")
+                    .then(literal("list")
+                            .executes(OfferCommandHandler::list)
+                    )
+                    .then(literal("create")
+                            .then(argument("item", ItemStackArgumentType.itemStack(commandRegistryAccess))
+                                    .then(argument("pointsPerItem", DoubleArgumentType.doubleArg(0))
+                                            .then(argument("itemCount", IntegerArgumentType.integer(1))
+                                                    .executes(context -> OfferCommandHandler.createWithArgs(
+                                                            context.getSource(),
+                                                            ItemStackArgumentType.getItemStackArgument(context, "item").getItem(),
+                                                            DoubleArgumentType.getDouble(context, "pointsPerItem"),
+                                                            IntegerArgumentType.getInteger(context, "itemCount")
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
+                    )
+                    .then(literal("claim")
+                            .executes(OfferCommandHandler::claim)
+                    )
+            );
+            dispatcher.register(literal("sell")
+                    .executes(SellCommandHandler::sell)
+            );
         });
     }
 }
