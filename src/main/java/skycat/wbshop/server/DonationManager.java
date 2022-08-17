@@ -65,9 +65,7 @@ public class DonationManager {
     }
 
     public static void makeDonation(List<ItemStack> itemStacks, PlayerEntity player) {
-        itemStacks.iterator().forEachRemaining(itemStack -> {
-            EconomyManager.getInstance().addBalance(player.getUuid(), getPointValue(itemStack));
-        });
+        itemStacks.iterator().forEachRemaining(itemStack -> EconomyManager.getInstance().addBalance(player.getUuid(), getPointValue(itemStack)));
         WorldBorderHelper.updateWorldBorder(WBShopServer.ECONOMY_MANAGER);
     }
 }

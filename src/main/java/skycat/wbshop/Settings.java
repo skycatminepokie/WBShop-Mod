@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Settings {
     public static final File SETTINGS_FILE = new File("wbshop_settings.txt");
     public double pointsPerBlock = 3;
-    public ArrayList<Offer> offerList = new ArrayList<Offer>();
+    public ArrayList<Offer> offerList = new ArrayList<>();
     public long lastOfferId = -1;
 
     private Settings() {

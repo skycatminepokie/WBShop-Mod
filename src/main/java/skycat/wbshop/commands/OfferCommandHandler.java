@@ -60,7 +60,12 @@ public class OfferCommandHandler {
      * @throws CommandSyntaxException
      */
     public static int list(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        // TODO
-        return 0;
+        context.getSource().sendFeedback(Text.of("Offers: "), false);
+        OfferManager.getOfferList().forEach(offer -> {
+            if (offer.getUnfilled() > 0) {
+                context.getSource().sendFeedback(Text.of("" + offer.getUnfilled() + "x " + offer.getItem().getName().getString() + " for " + offer.getPointsPerItem() + " points per item."), false);
+            }
+        });
+        return 1;
     }
 }
