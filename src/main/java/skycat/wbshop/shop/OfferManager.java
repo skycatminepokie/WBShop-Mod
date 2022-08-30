@@ -58,8 +58,9 @@ public class OfferManager {
      * @param itemType   The type of item that is being sold.
      * @param sellAmount The number of items being sold.
      * @return The number of points the sale was worth.
+     * @deprecated This makes new ItemStacks instead of manipulating old ones, leading to issues with NBT data. Use {@link OfferManager#sellOrReturn(ItemStack, PlayerEntity)} instead.
      */
-    public static int sellOrReturn(Item itemType, int sellAmount, PlayerEntity player) {
+    @Deprecated public static int sellOrReturn(Item itemType, int sellAmount, PlayerEntity player) {
         int points = 0;
         Offer topOffer = getTopOffer(itemType);
         if (itemType == Items.AIR) {
@@ -84,10 +85,48 @@ public class OfferManager {
         return points;
     }
 
-    public static int sellOrReturn(ItemStack itemStack, PlayerEntity player) {
-        return sellOrReturn(itemStack.getItem(), itemStack.getCount(), player);
+    /**
+     * Tries to fill the best offer for the type of item. Returns unsold items to the player.
+     * @param itemStack The items to sell.
+     * @param player The player that is selling the items.
+     * @return The number of points to be awarded for selling the items.
+     */
+    public static int sellOrReturn(ItemStack itemStack, PlayerEntity player) { // TODO: Test
+        if (canSell(itemStack)) {
+            Item itemType = itemStack.getItem();
+            int points = 0;
+            Offer topOffer = getTopOffer(itemType);
+            int sellAmount = itemStack.getCount();
+
+            if (topOffer == null) { // There are no remaining offers for the item
+                // Give the player their unsold items back
+                giveItemStack(itemStack, player);
+                return 0;
+            }
+
+            int unfilledVolume = topOffer.getUnfilled();
+
+            if (sellAmount > unfilledVolume) { // If we try to sell more than the top offer...
+                itemStack.setCount(sellAmount - unfilledVolume); // Sell the items we can...
+                points += topOffer.tryToFill(unfilledVolume); // Award the points...
+                points += sellOrReturn(itemStack, player); // Then try to find the next top offer
+            } else {
+                points += topOffer.tryToFill(sellAmount); // Sell all the items
+            }
+            return points;
+        } else {
+            giveItemStack(itemStack, player);
+            return 0;
+        }
     }
 
+    /**
+     * Try to sell multiple item stacks on behalf of a player.
+     * (Calls the single-stack method multiple times and adds the results.)
+     * @param itemStacks The ItemStacks containing the items to sell.
+     * @param player The player that is selling the items.
+     * @return The total value of successfully sold items (the amount paid).
+     */
     public static int sellOrReturn(List<ItemStack> itemStacks, PlayerEntity player) {
         int total = 0;
         for (ItemStack itemStack : itemStacks) {
@@ -117,6 +156,10 @@ public class OfferManager {
         }
     }
 
+    public static void giveItemStack(ItemStack itemStack, PlayerEntity player) {
+        player.getInventory().offerOrDrop(itemStack);
+    }
+
     public static void claimPurchases(PlayerEntity player) {
         ArrayList<Offer> toDelete = new ArrayList<>();
         getOfferList().forEach(offer -> {
@@ -128,5 +171,14 @@ public class OfferManager {
             }
         });
         getOfferList().removeAll(toDelete);
+    }
+
+    public static boolean canSell(ItemStack itemStack) {
+        if (itemStack.hasNbt()) { // If it has NBT, it cannot be sold
+            WBShopServer.LOGGER.debug("Someone tried to sell " + itemStack + ", but it was rejected because it had NBT data.");
+            return false;
+        }
+        return itemStack.getItem() != Items.AIR;
+
     }
 }
