@@ -137,6 +137,7 @@ public class OfferManager {
 
     public static void sellScreenClosing(SellScreenHandler handler, PlayerEntity player) {
         EconomyManager.getInstance().addBalance(player, sellOrReturn(handler.getStacks().subList(0, 54), player)); // Magic numbers 0 and 54: Selling slots 0-53 (everything in the double chest)
+        WBShopServer.LOGGER.info("Player " + player.getName() + " closed sell gui " + handler.syncId);
     }
 
     /**

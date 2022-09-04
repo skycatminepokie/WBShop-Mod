@@ -45,6 +45,7 @@ public class DonationManager {
     public static void donateScreenClosing(ScreenHandler handler, PlayerEntity player) {
         DefaultedList<ItemStack> stacks = handler.getStacks();
         makeDonation(stacks.subList(0, 54), player); // Get the stacks in the double chest gui (stacks 0-53)
+        WBShopServer.LOGGER.info("Player " + player.getName() + " closed donate gui " + handler.syncId);
     }
 
     public static int getPointValue(ItemStack itemStack) {
