@@ -7,9 +7,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
+import skycat.wbshop.WBShopServer;
 
 @Environment(EnvType.SERVER)
 public class DonateScreenHandler extends GenericContainerScreenHandler {
+    public boolean beenClosed = false;
+
     public DonateScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory, int rows) {
         super(type, syncId, playerInventory, inventory, rows);
     }
@@ -21,7 +24,10 @@ public class DonateScreenHandler extends GenericContainerScreenHandler {
 
     @Override
     public void close(PlayerEntity player) {
-        DonationManager.donateScreenClosing(this, player);
-        super.close(player);
+        if (!beenClosed) {
+            DonationManager.donateScreenClosing(this, player);
+            super.close(player);
+            beenClosed = true;
+        } // Maybe add logging for double-closing
     }
 }

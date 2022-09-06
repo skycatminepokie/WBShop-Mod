@@ -11,6 +11,8 @@ import skycat.wbshop.shop.OfferManager;
 
 @Environment(EnvType.SERVER)
 public class SellScreenHandler extends GenericContainerScreenHandler {
+    boolean beenClosed = false;
+
     public SellScreenHandler(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, Inventory inventory, int rows) {
         super(type, syncId, playerInventory, inventory, rows);
     }
@@ -22,7 +24,10 @@ public class SellScreenHandler extends GenericContainerScreenHandler {
 
     @Override
     public void close(PlayerEntity player) {
-        OfferManager.sellScreenClosing(this, player);
-        super.close(player);
+        if (!beenClosed) {
+            OfferManager.sellScreenClosing(this, player);
+            beenClosed = true;
+            super.close(player);
+        } // Maybe add logging for double-closing
     }
 }
