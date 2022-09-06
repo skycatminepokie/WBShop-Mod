@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypes;
 import skycat.wbshop.WBShopServer;
 import skycat.wbshop.server.EconomyManager;
 import skycat.wbshop.server.SellScreenHandler;
@@ -100,6 +102,7 @@ public class OfferManager {
 
             if (topOffer == null) { // There are no remaining offers for the item
                 // Give the player their unsold items back
+                WBShopServer.LOGGER.info("Player attempted to sell " + itemStack.getName().getString() + " x" + itemStack.getCount() + ", but there were no offers.");
                 giveItemStack(itemStack, player);
                 return 0;
             }
@@ -113,6 +116,7 @@ public class OfferManager {
             } else {
                 points += topOffer.tryToFill(sellAmount); // Sell all the items
             }
+            WBShopServer.LOGGER.info("Player sold " + itemStack.getName().getString() + " x" + itemStack.getCount() + " successfully.");
             return points;
         } else {
             giveItemStack(itemStack, player);
@@ -130,6 +134,7 @@ public class OfferManager {
     public static int sellOrReturn(List<ItemStack> itemStacks, PlayerEntity player) {
         int total = 0;
         for (ItemStack itemStack : itemStacks) {
+
             total += sellOrReturn(itemStack, player);
         }
         return total;
@@ -137,7 +142,7 @@ public class OfferManager {
 
     public static void sellScreenClosing(SellScreenHandler handler, PlayerEntity player) {
         EconomyManager.getInstance().addBalance(player, sellOrReturn(handler.getStacks().subList(0, 54), player)); // Magic numbers 0 and 54: Selling slots 0-53 (everything in the double chest)
-        WBShopServer.LOGGER.info("Player " + player.getName() + " closed sell gui " + handler.syncId);
+        WBShopServer.LOGGER.info("Player " + player.getName().getString() + " closed sell gui " + handler.syncId + " at location X: " + (int) player.getPos().getX() + " Y: " + (int) player.getPos().getY() + " Z: " + (int) player.getPos().getZ());
     }
 
     /**
