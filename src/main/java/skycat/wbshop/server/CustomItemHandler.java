@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -14,6 +13,8 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.nbt.NbtType;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
@@ -21,8 +22,6 @@ import net.minecraft.world.World;
 
 import java.util.Collections;
 import java.util.Random;
-
-import static skycat.wbshop.WBShopServer.LOGGER;
 
 @Environment(EnvType.SERVER)
 public class CustomItemHandler implements UseItemCallback {
@@ -56,6 +55,8 @@ public class CustomItemHandler implements UseItemCallback {
                     fireball.powerY *= FIRE_BOOK_LAUNCH_SPEED;
                     fireball.powerZ *= FIRE_BOOK_LAUNCH_SPEED;
                     world.spawnEntity(fireball);
+                    // TODO: Mixin so I can use fireball.playUseSound() maybe
+                    world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1.0f, random.nextFloat(0.5f, 1.001f), false); // don't know what useDistance does, but oh well. Used somewhat random pitch because FireChargeItem does, and it sounds nicer // WARN Do I need to credit that?
                     return TypedActionResult.success(ItemStack.EMPTY);
                 }
                 // EntityType.PIG.spawn((ServerWorld) world, null, null, null, new BlockPos(player.getPos()), SpawnReason.COMMAND, true, false);
