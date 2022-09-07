@@ -149,6 +149,9 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                     .then(argument("amount", IntegerArgumentType.integer(1))
                             .executes(WithdrawCommandHandler::withdrawCalledAmount)
                     )
+                    .then(literal("all")
+                            .executes(WithdrawCommandHandler::withdrawCalledAll)
+                    )
             );
             dispatcher.register(literal("offer")
                     .then(literal("list")

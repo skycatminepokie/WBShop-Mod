@@ -13,6 +13,7 @@ public class Settings {
     public double pointsPerBlock = 3;
     public ArrayList<Offer> offerList = new ArrayList<>();
     public long lastOfferId = -1;
+    public boolean enableLogging = true;
 
     private Settings() {
 
