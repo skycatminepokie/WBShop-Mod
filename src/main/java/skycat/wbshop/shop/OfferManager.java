@@ -134,7 +134,6 @@ public class OfferManager {
     public static int sellOrReturn(List<ItemStack> itemStacks, PlayerEntity player) {
         int total = 0;
         for (ItemStack itemStack : itemStacks) {
-
             total += sellOrReturn(itemStack, player);
         }
         return total;

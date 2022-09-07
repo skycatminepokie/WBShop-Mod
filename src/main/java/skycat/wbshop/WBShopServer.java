@@ -1,6 +1,5 @@
 package skycat.wbshop;
 
-import com.google.gson.Gson;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -8,16 +7,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import skycat.wbshop.commands.*;
-import skycat.wbshop.server.DonationManager;
-import skycat.wbshop.server.EconomyManager;
-import skycat.wbshop.server.VoteManager;
-import skycat.wbshop.server.WorldBorderHelper;
+import skycat.wbshop.server.*;
 
 import java.io.FileNotFoundException;
 
@@ -26,11 +26,12 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 @Environment(EnvType.SERVER)
 public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping, ServerLifecycleEvents.ServerStarted { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
-    public static final Gson GSON = new Gson();
+    public static final Gson GSON = new GsonBuilder().create(); // TODO Work on allowing prettyprint
     public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
     public static final Settings SETTINGS = Settings.load();
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
     public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
+    public static final CustomItemHandler CUSTOM_ITEM_HANDLER = new CustomItemHandler();
     public static MinecraftServer SERVER_INSTANCE;
 
     @Override
@@ -38,6 +39,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
         WBShopServer.LOGGER.info("WBShop Initializing (Server)");
         ServerLifecycleEvents.SERVER_STOPPING.register(this);
         ServerLifecycleEvents.SERVER_STARTED.register(this);
+        UseItemCallback.EVENT.register(CUSTOM_ITEM_HANDLER);
         DonationManager.reloadPointValues();
         registerCommands();
         WorldBorderHelper.setPointsPerBlock(SETTINGS.pointsPerBlock);
