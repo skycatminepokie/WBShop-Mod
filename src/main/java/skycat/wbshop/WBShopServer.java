@@ -181,6 +181,9 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
             dispatcher.register(literal("sell")
                     .executes(SellCommandHandler::sell)
             );
+            dispatcher.register(literal("buy")
+                    .executes(BuyCommandHandler::buyCalled)
+            );
         });
     }
 }
