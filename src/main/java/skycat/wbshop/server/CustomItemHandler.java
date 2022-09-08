@@ -43,8 +43,7 @@ public class CustomItemHandler implements UseItemCallback {
         CUSTOM_ITEMS.put("fireBook", () -> { // TODO WARN BROKEN
             ItemStack itemStack = new ItemStack(Items.BOOK, 1);
             itemStack.setCustomName(Text.literal("Fire Book").formatted(Formatting.RED, Formatting.BOLD, Formatting.ITALIC));
-            NbtCompound itemNbt = new NbtCompound();
-            itemNbt.put(ITEM_ID_NBT_KEY, NbtString.of("fireBook"));
+
             NbtList lore = new NbtList();
             lore.add(NbtString.of(Text.Serializer.toJson(
                     Text.literal("Shoots fire. Like, a lot of it.").formatted(Formatting.RED)
