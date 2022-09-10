@@ -31,7 +31,12 @@ public class WithdrawCommandHandler {
 
     public static int withdrawCalledAll(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity thePlayer = context.getSource().getPlayer();
-        return withdrawToVoucher(thePlayer, EconomyManager.getInstance().getBalance(thePlayer));
+        int playerBal = EconomyManager.getInstance().getBalance(thePlayer);
+        if (playerBal > 0) {
+            return withdrawToVoucher(thePlayer, playerBal);
+        } else {
+            throw new SimpleCommandExceptionType(new LiteralMessage("You need at least 1 point to withdraw.")).create();
+        }
     }
 
     private static int withdrawToVoucher(ServerPlayerEntity thePlayer, int amount) throws CommandSyntaxException {
