@@ -30,7 +30,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
     public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
     public static final Settings SETTINGS = Settings.load();
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
-    public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
+    // public static final VoteManager VOTE_MANAGER = VoteManager.loadOrMake();
     public static final CustomItemHandler CUSTOM_ITEM_HANDLER = new CustomItemHandler();
     public static MinecraftServer SERVER_INSTANCE;
 
@@ -94,13 +94,13 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                     )
                     .executes(PayCommandHandler::payCalled));
             dispatcher.register(literal("bal").executes(BalCommandHandler::balCalled));
-            dispatcher.register(literal("vote")
+            /*dispatcher.register(literal("vote")
                     .then(argument("policy", IntegerArgumentType.integer(0))
                             .then(argument("amount", IntegerArgumentType.integer(1))
                                     .executes(VoteCommandHandler::calledWithAmount))
                             .executes(VoteCommandHandler::calledWithPolicy))
                     .executes(VoteCommandHandler::voteCalled)
-            );
+            );*/
             dispatcher.register(
                     literal("wbsmp")
                             .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(4))
