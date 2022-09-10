@@ -11,19 +11,10 @@ public class WBShopSave { // TODO
     public boolean perWorldSettings = false;
     public boolean enableDonating = true;
     public boolean enableWorldborderControl = true;
+    public boolean enableOffers = true;
 
     public CustomItemSettings customItemSettings = new CustomItemSettings();
     public WorldborderSettings worldborderSettings = new WorldborderSettings();
-
-    // Donating
-
-    // Offers
-    public boolean enableOffers = true; // Overrides everything in this category if false
-    public long lastOfferId = -1; // TODO: make something better than this id system
-    public ArrayList<Offer> offers = new ArrayList<>();
-
-    // Items
-
 
     public void save() {
 
@@ -60,11 +51,22 @@ public class WBShopSave { // TODO
     }
 
     public class DonationSettings {
-
+        public int pointsPerItem = 1;
+        // HashMap of item: point value
         public enum DonationEvaluatorType {
             UNIFORM, // X points per item
             WEIGHTED // Some items are worth more than others
         }
+    }
+
+    public class OffersSave {
+        public long lastOfferId = -1; // TODO: make something better than this id system
+        public ArrayList<Offer> offers = new ArrayList<>();
+        public boolean returnInvalidItems = true; // Return leftover points and bought items for pre-existing (but now invalid) offers when a player claims their offers
+        public boolean enableValidItemList = true;
+        public boolean isBlacklist = true; // True prevents items in the list from being sold. False allows ONLY items from the list to be sold.
+        // public ArrayList<Integer> validItemList = new ArrayList<>(); // TODO: I want to be able to add items by namespace, not by integer id
+
     }
 
 }
