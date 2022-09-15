@@ -11,7 +11,7 @@
     "website": "https://github.com/skycatminepokie",
     "repo": "https://github.com/skycatminepokie/WBShop-Mod"
   },
-  "license": "MIT",
+  "license": "CC BY-NC-SA 4.0",
   "icon": "assets/wbshop/icon.png",
   "environment": "server",
   "entrypoints": {
