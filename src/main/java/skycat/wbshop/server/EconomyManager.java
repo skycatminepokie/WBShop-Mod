@@ -183,6 +183,14 @@ public class EconomyManager { // TODO: Ensure all wallets are always initialized
         return true;
     }
 
+    public int setBalance(UUID uuid, int amount) { // TODO Test
+        if (!isValidEntry(uuid)) {
+            throw new IllegalArgumentException("uuid does not have a valid entry");
+        }
+        wallets.put(uuid, amount);
+        return wallets.get(uuid);
+    }
+
     /**
      * Transfer a portion of a balance from one player to another.
      *

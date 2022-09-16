@@ -99,4 +99,21 @@ public class WbsmpCommandHandler {
         context.getSource().sendFeedback(Text.of("POINT_LOSS updated."), true);
         return 1;
     }
+
+    /**
+     * Set the number of points in a player's wallet
+     * @return number of players affected
+     */
+    public static int setPoints(CommandContext<ServerCommandSource> context, boolean update) throws CommandSyntaxException { // TODO Test
+        Collection<GameProfile> targets = GameProfileArgumentType.getProfileArgument(context, "player");
+        for (GameProfile target : targets) {
+            int amount = context.getArgument("amount", Integer.class);
+            EconomyManager.getInstance().setBalance(target.getId(), amount);
+            context.getSource().sendFeedback(Text.of(target.getName()+ " now has " + amount + " points."), false);
+        }
+        if (update) {
+            WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
+        }
+        return targets.size();
+    }
 }

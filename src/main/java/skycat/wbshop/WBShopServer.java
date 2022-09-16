@@ -26,7 +26,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 @Environment(EnvType.SERVER)
 public class WBShopServer implements DedicatedServerModInitializer, ServerLifecycleEvents.ServerStopping, ServerLifecycleEvents.ServerStarted { // ServerLifecycleEvents.ServerStopping allows us to listen for the server stopping
-    public static final Gson GSON = new GsonBuilder().create(); // TODO Work on allowing prettyprint
+    public static final Gson GSON = new GsonBuilder().create(); // TODO Work on allowing pretty print
     public static final Logger LOGGER = LoggerFactory.getLogger("wbshop");
     public static final Settings SETTINGS = Settings.load();
     public static final EconomyManager ECONOMY_MANAGER = EconomyManager.makeNewManager(); // Must be after GSON declaration
@@ -143,6 +143,14 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                                                     .executes(WbsmpCommandHandler::econGetWithArgs)
                                             )
                                             .executes(WbsmpCommandHandler::econGet)
+                                    )
+                                    .then(literal("set")
+                                            .then(argument("player", GameProfileArgumentType.gameProfile())
+                                                    .then(literal("noUpdate")
+                                                            .executes(context -> WbsmpCommandHandler.setPoints(context, false))
+                                                    )
+                                                    .executes(context -> WbsmpCommandHandler.setPoints(context, true))
+                                            )
                                     )
                                     .executes(WbsmpCommandHandler::econ)
                             )
