@@ -8,11 +8,12 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import skycat.wbshop.server.EconomyManager;
 
 import java.util.Collection;
 import java.util.UUID;
+
+import static skycat.wbshop.util.WBShopAbstracter.textOf;
 
 public class PayCommandHandler {
     public static int payCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -36,8 +37,8 @@ public class PayCommandHandler {
             throw new SimpleCommandExceptionType(new LiteralMessage("You don't have enough points for that!")).create();
         }
 
-        context.getSource().sendFeedback(Text.of("Successfully transferred " + amount + (amount == 1 ? " point." : " points.")), false); // TODO: Maybe there should be a better way to choose point vs points
-        context.getSource().getServer().getPlayerManager().getPlayer(sendTo.getId()).sendMessage(Text.of(sender.getName().getString() + " sent you " + amount + (amount == 1 ? " point." : " points.")));
+        context.getSource().sendFeedback(textOf("Successfully transferred " + amount + (amount == 1 ? " point." : " points.")), false); // TODO: Maybe there should be a better way to choose point vs points
+        context.getSource().getServer().getPlayerManager().getPlayer(sendTo.getId()).sendMessage(textOf(sender.getName().getString() + " sent you " + amount + (amount == 1 ? " point." : " points.")));
         return 1;
     }
 }

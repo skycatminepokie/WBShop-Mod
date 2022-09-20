@@ -5,15 +5,16 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 import skycat.wbshop.server.EconomyManager;
 import skycat.wbshop.server.WorldBorderHelper;
 
 import java.util.Collection;
 
+import static skycat.wbshop.util.WBShopAbstracter.textOf;
+
 public class WbsmpCommandHandler {
     public static int econ(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendFeedback(Text.of("/econ: Manage the economy"), false);
+        context.getSource().sendFeedback(textOf("/econ: Manage the economy"), false);
         return 1;
     }
 
@@ -29,7 +30,7 @@ public class WbsmpCommandHandler {
         for (GameProfile target : targets) {
             int amount = context.getArgument("amount", Integer.class);
             EconomyManager.getInstance().removeBalance(target.getId(), amount);
-            context.getSource().sendFeedback(Text.of("Removed " + amount + " points from " + target.getName()), true);
+            context.getSource().sendFeedback(textOf("Removed " + amount + " points from " + target.getName()), true);
         }
         if (update) {
             WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
@@ -49,7 +50,7 @@ public class WbsmpCommandHandler {
         for (GameProfile target : targets) {
             int amount = context.getArgument("amount", Integer.class);
             EconomyManager.getInstance().addBalance(target.getId(), amount);
-            context.getSource().sendFeedback(Text.of("Added " + amount + " points to " + target.getName()), false);
+            context.getSource().sendFeedback(textOf("Added " + amount + " points to " + target.getName()), false);
         }
         if (update) {
             WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
@@ -58,12 +59,12 @@ public class WbsmpCommandHandler {
     }
 
     public static int econAdd(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendFeedback(Text.of("/econ add: Add points to a player's wallet"), false);
+        context.getSource().sendFeedback(textOf("/econ add: Add points to a player's wallet"), false);
         return 1;
     }
 
     public static int econGet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendFeedback(Text.of("/econ get: Get the number of points a player has"), false);
+        context.getSource().sendFeedback(textOf("/econ get: Get the number of points a player has"), false);
         return 1;
     }
 
@@ -71,13 +72,13 @@ public class WbsmpCommandHandler {
         Collection<GameProfile> targets = GameProfileArgumentType.getProfileArgument(context, "player");
         for (GameProfile target : targets) {
             // WBShopServer.LOGGER.info("id: " + target.getId());
-            context.getSource().sendFeedback(Text.of(target.getName() + " has " + EconomyManager.getInstance().getBalance(target.getId()) + " points."), false);
+            context.getSource().sendFeedback(textOf(target.getName() + " has " + EconomyManager.getInstance().getBalance(target.getId()) + " points."), false);
         }
         return 1;
     }
 
     public static int econRemove(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendFeedback(Text.of("/econ remove: Remove points from a player's wallet"), false);
+        context.getSource().sendFeedback(textOf("/econ remove: Remove points from a player's wallet"), false);
         return 1;
     }
 
@@ -85,7 +86,7 @@ public class WbsmpCommandHandler {
     public static int setPointsPerBlock(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         WorldBorderHelper.setPointsPerBlock(context.getArgument("points", Double.class));
         WorldBorderHelper.updateWorldBorder(EconomyManager.getInstance());
-        context.getSource().sendFeedback(Text.of("PointsPerBlock updated."), true);
+        context.getSource().sendFeedback(textOf("PointsPerBlock updated."), true);
         return 1;
     }
 
@@ -96,7 +97,7 @@ public class WbsmpCommandHandler {
 
     public static int setDeathLoss(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         EconomyManager.POINT_LOSS = context.getArgument("loss", Double.class);
-        context.getSource().sendFeedback(Text.of("POINT_LOSS updated."), true);
+        context.getSource().sendFeedback(textOf("POINT_LOSS updated."), true);
         return 1;
     }
 }

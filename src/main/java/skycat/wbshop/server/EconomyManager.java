@@ -2,7 +2,6 @@ package skycat.wbshop.server;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import skycat.wbshop.WBShopServer;
 
@@ -12,6 +11,8 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.UUID;
+
+import static skycat.wbshop.util.WBShopAbstracter.textOf;
 
 /**
  * A class to manage the balances of all players.
@@ -147,7 +148,7 @@ public class EconomyManager { // TODO: Ensure all wallets are always initialized
         }
         int pointsLost = (int) (getBalance(uuid) * (POINT_LOSS));  // Lose POINT_LOSS * balance points on death (ex if POINT_LOSS = 0.1, lose 10% of points on death)
         int pointsLeft = removeBalance(uuid, pointsLost);
-        player.sendMessage(Text.of("You died and lost " + pointsLost + (pointsLost == 1 ? " point" : " points") + "! You have " + pointsLeft + (pointsLeft == 1 ? " point" : " points") + " left."));
+        player.sendMessage(textOf("You died and lost " + pointsLost + (pointsLost == 1 ? " point" : " points") + "! You have " + pointsLeft + (pointsLeft == 1 ? " point" : " points") + " left."));
     }
 
     /**

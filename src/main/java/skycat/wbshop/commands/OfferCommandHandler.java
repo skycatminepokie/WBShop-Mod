@@ -8,10 +8,11 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.item.Item;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import skycat.wbshop.WBShopServer;
 import skycat.wbshop.shop.Offer;
 import skycat.wbshop.shop.OfferManager;
+
+import static skycat.wbshop.util.WBShopAbstracter.textOf;
 
 public class OfferCommandHandler {
     /**
@@ -24,7 +25,7 @@ public class OfferCommandHandler {
     public static int claim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         // TODO: When successfully claiming an offer, this always gives an error message to the player. Maybe it's because we're deleting the offer as it is being accessed?
         OfferManager.claimPurchases(context.getSource().getPlayerOrThrow());
-        context.getSource().sendFeedback(Text.of("Successfully claimed your filled offers."), false);
+        context.getSource().sendFeedback(textOf("Successfully claimed your filled offers."), false);
         return 1; // TODO: Maybe return number of purchases or number of items claimed?
     }
 
@@ -47,7 +48,7 @@ public class OfferCommandHandler {
         OfferManager.registerOffer(new Offer(player.getUuid(), itemType, pointsPerItem, itemCount));
 
         // Send feedback
-        source.sendFeedback(Text.of("Created an offer for " + itemCount + "x " + itemType.getName().getString() + " at " + pointsPerItem + " points per item (" + totalCost + " points in total)"), false);
+        source.sendFeedback(textOf("Created an offer for " + itemCount + "x " + itemType.getName().getString() + " at " + pointsPerItem + " points per item (" + totalCost + " points in total)"), false);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -60,10 +61,10 @@ public class OfferCommandHandler {
      * @throws CommandSyntaxException
      */
     public static int list(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendFeedback(Text.of("Offers: "), false);
+        context.getSource().sendFeedback(textOf("Offers: "), false);
         OfferManager.getOfferList().forEach(offer -> {
             if (offer.getUnfilled() > 0) {
-                context.getSource().sendFeedback(Text.of("" + offer.getUnfilled() + "x " + offer.getItem().getName().getString() + " for " + offer.getPointsPerItem() + " points per item."), false);
+                context.getSource().sendFeedback(textOf("" + offer.getUnfilled() + "x " + offer.getItem().getName().getString() + " for " + offer.getPointsPerItem() + " points per item."), false);
             }
         });
         return 1;
