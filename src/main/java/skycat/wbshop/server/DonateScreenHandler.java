@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import skycat.wbshop.WBShopServer;
 
 @Environment(EnvType.SERVER)
 public class DonateScreenHandler extends GenericContainerScreenHandler {

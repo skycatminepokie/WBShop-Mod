@@ -12,14 +12,16 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import skycat.wbshop.server.EconomyManager;
 import skycat.wbshop.server.WorldBorderHelper;
+
+import static skycat.wbshop.util.WBShopAbstracter.textOf;
+import static skycat.wbshop.util.WBShopAbstracter.textToJson;
 
 public class WithdrawCommandHandler {
 
     public static int withdrawCalled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendFeedback(Text.of("Use /withdraw [amount] to turn your points into vouchers. Vouchers do not count towards the world border."), false);
+        context.getSource().sendFeedback(textOf("Use /withdraw [amount] to turn your points into vouchers. Vouchers do not count towards the world border."), false);
         return 1;
     }
 
@@ -31,7 +33,12 @@ public class WithdrawCommandHandler {
 
     public static int withdrawCalledAll(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity thePlayer = context.getSource().getPlayer();
-        return withdrawToVoucher(thePlayer, EconomyManager.getInstance().getBalance(thePlayer));
+        int playerBal = EconomyManager.getInstance().getBalance(thePlayer);
+        if (playerBal > 0) {
+            return withdrawToVoucher(thePlayer, playerBal);
+        } else {
+            throw new SimpleCommandExceptionType(new LiteralMessage("You need at least 1 point to withdraw.")).create();
+        }
     }
 
     private static int withdrawToVoucher(ServerPlayerEntity thePlayer, int amount) throws CommandSyntaxException {
@@ -49,13 +56,12 @@ public class WithdrawCommandHandler {
 
         // Add vanilla NBT
         // Set name
-        itemStack.setCustomName(Text.of("Point Voucher"));
+        itemStack.setCustomName(textOf("Point Voucher"));
 
         // Prep lore
         NbtList lore = new NbtList();
         // NbtString#of needs the JSON format of a Text in the form of a string
-        lore.add(NbtString.of(Text.Serializer.toJson(Text.of(amount + " point" + (amount == 1 ? "" : "s")))));
-        // lore.add(NbtString.of(Text.Serializer.toJson(Text.of("Withdrawn by " + context.getSource().getName()))));
+        lore.add(NbtString.of(textToJson(textOf(amount + " point" + (amount == 1 ? "" : "s")))));
 
         // Set lore
         itemStack.getOrCreateSubNbt("display").put("Lore", lore);

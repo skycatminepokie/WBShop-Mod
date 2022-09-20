@@ -4,9 +4,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
 import static skycat.wbshop.WBShopServer.ECONOMY_MANAGER;
+import static skycat.wbshop.util.WBShopAbstracter.textOf;
 
 public class BalCommandHandler {
 
@@ -21,13 +21,13 @@ public class BalCommandHandler {
         try {
             points = ECONOMY_MANAGER.getBalance(thePlayer.getUuid());
         } catch (IllegalArgumentException e) {
-            context.getSource().sendFeedback(Text.of("You have no points."), false);
+            context.getSource().sendFeedback(textOf("You have no points."), false);
             ECONOMY_MANAGER.initializeWallet(thePlayer.getUuid());
             return 0;
         }
 
         context.getSource().sendFeedback(
-                Text.of(switch (points) {
+                textOf(switch (points) {
                     case 0 -> "You have no points.";
                     case 1 -> "You have 1 point.";
                     default -> "You have " + points + " points.";
