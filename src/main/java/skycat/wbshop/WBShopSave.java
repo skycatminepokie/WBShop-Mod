@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class WBShopSave { // TODO
     public static final String SAVE_FILE = "WBShopSave.json";
+    public int version = 1;
 
     public boolean perWorldSave = false;
     public boolean perWorldSettings = false;
