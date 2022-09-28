@@ -9,6 +9,7 @@ import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import skycat.wbshop.server.EconomyManager;
+import skycat.wbshop.util.WBShopAbstracter;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class PayCommandHandler {
         }
 
         context.getSource().sendFeedback(textOf("Successfully transferred " + amount + (amount == 1 ? " point." : " points.")), false); // TODO: Maybe there should be a better way to choose point vs points
-        context.getSource().getServer().getPlayerManager().getPlayer(sendTo.getId()).sendMessage(textOf(sender.getName().getString() + " sent you " + amount + (amount == 1 ? " point." : " points.")));
+        WBShopAbstracter.sendMessageToPlayer(context.getSource().getServer().getPlayerManager().getPlayer(sendTo.getId()), textOf(sender.getName().getString() + " sent you " + amount + (amount == 1 ? " point." : " points.")));
         return 1;
     }
 }
