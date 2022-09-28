@@ -177,7 +177,7 @@ public class OfferManager {
     }
 
     public static boolean canSell(ItemStack itemStack) {
-        if (itemStack.hasNbt()) { // If it has NBT, it cannot be sold
+        if (itemStack.hasTag()) { // If it has NBT, it cannot be sold
             WBShopServer.LOGGER.debug("Someone tried to sell " + itemStack + ", but it was rejected because it had NBT data.");
             return false;
         }

@@ -39,7 +39,7 @@ public class PayCommandHandler {
         }
 
         context.getSource().sendFeedback(textOf("Successfully transferred " + amount + (amount == 1 ? " point." : " points.")), false); // TODO: Maybe there should be a better way to choose point vs points
-        WBShopAbstracter.sendMessageToPlayer(context.getSource().getServer().getPlayerManager().getPlayer(sendTo.getId()), textOf(sender.getName().getString() + " sent you " + amount + (amount == 1 ? " point." : " points.")));
+        WBShopAbstracter.sendMessageToPlayer(context.getSource().getMinecraftServer().getPlayerManager().getPlayer(sendTo.getId()), textOf(sender.getName().getString() + " sent you " + amount + (amount == 1 ? " point." : " points.")));
         return 1;
     }
 }

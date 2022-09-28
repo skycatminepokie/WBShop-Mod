@@ -49,7 +49,7 @@ public class DonationManager {
     }
 
     public static int getPointValue(ItemStack itemStack) {
-        NbtCompound compound = itemStack.getNbt();
+        NbtCompound compound = itemStack.getTag();
         if (compound != null) { // If it has custom NBT
             NbtInt pointsNbt = (NbtInt) compound.get("wbpoints"); // Is there a better name than pointsNbt? I want it to note that it is in an nbt form.
             if (pointsNbt != null) { // And it has wbpoints stored in its nbt
