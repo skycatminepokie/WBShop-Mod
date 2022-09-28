@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.command.argument.GameProfileArgumentType;
@@ -83,7 +83,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
 
     private void registerCommands() {
         // Props to u/profbj on reddit for showing me how to register commands
-        CommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess, environment) -> {
+        CommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess) -> {
             dispatcher.register(literal("donate").executes(DonateCommandHandler::donateCalled));
             dispatcher.register(literal("pay")
                     .then(argument("player", GameProfileArgumentType.gameProfile())
@@ -159,7 +159,7 @@ public class WBShopServer implements DedicatedServerModInitializer, ServerLifecy
                             .executes(OfferCommandHandler::list)
                     )
                     .then(literal("create")
-                            .then(argument("item", ItemStackArgumentType.itemStack(commandRegistryAccess))
+                            .then(argument("item", ItemStackArgumentType.itemStack())
                                     .then(argument("pointsPerItem", DoubleArgumentType.doubleArg(0))
                                             .then(argument("itemCount", IntegerArgumentType.integer(1))
                                                     .executes(context -> OfferCommandHandler.createWithArgs(
