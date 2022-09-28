@@ -24,7 +24,7 @@ public class OfferCommandHandler {
      */
     public static int claim(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         // TODO: When successfully claiming an offer, this always gives an error message to the player. Maybe it's because we're deleting the offer as it is being accessed?
-        OfferManager.claimPurchases(context.getSource().getPlayerOrThrow());
+        OfferManager.claimPurchases(context.getSource().getPlayer());
         context.getSource().sendFeedback(textOf("Successfully claimed your filled offers."), false);
         return 1; // TODO: Maybe return number of purchases or number of items claimed?
     }
@@ -35,7 +35,7 @@ public class OfferCommandHandler {
     }
 
     public static int createWithArgs(ServerCommandSource source, Item itemType, double pointsPerItem, int itemCount) throws CommandSyntaxException {
-        ServerPlayerEntity player = source.getPlayerOrThrow();
+        ServerPlayerEntity player = source.getPlayer();
         int totalCost = (int) Math.ceil(pointsPerItem * itemCount); // (rounded up - there will be some loss)
         // Check if player has enough points
         if (WBShopServer.ECONOMY_MANAGER.getBalance(player) < totalCost) {
