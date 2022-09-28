@@ -37,7 +37,7 @@ public class CustomItemHandler implements UseItemCallback {
         }
         ItemStack itemStack = player.getStackInHand(hand);
         if (isCustomItem(itemStack)) { // If the used item is a custom item
-            NbtCompound itemNbt = itemStack.getNbt();
+            NbtCompound itemNbt = itemStack.getTag();
             if (itemNbt.get(ITEM_ID_NBT_KEY).asString().equals("fireBook")) {
                 PlayerInventory inventory = player.getInventory();
                 if (inventory.containsAny(Collections.singleton(Items.FIRE_CHARGE))) {
@@ -67,7 +67,7 @@ public class CustomItemHandler implements UseItemCallback {
     }
 
     private boolean isCustomItem(ItemStack itemStack) { // TODO Probably could be simplified by catching errors instead of error-proofing
-        NbtCompound stackNbt = itemStack.getNbt();
+        NbtCompound stackNbt = itemStack.getTag();
         if (stackNbt != null && stackNbt.contains(ITEM_ID_NBT_KEY)) { // If the custom nbt is not null and contains the key denoting one of our custom items
             NbtElement nbtElement = stackNbt.get(ITEM_ID_NBT_KEY);
             if (nbtElement != null) { // And the element at the key is not null

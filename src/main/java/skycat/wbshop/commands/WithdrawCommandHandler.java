@@ -52,7 +52,7 @@ public class WithdrawCommandHandler {
         // Add custom NBT
         NbtCompound compound = new NbtCompound();
         compound.put("wbpoints", NbtInt.of(amount));
-        itemStack.setNbt(compound);
+        itemStack.setTag(compound);
 
         // Add vanilla NBT
         // Set name
@@ -64,7 +64,7 @@ public class WithdrawCommandHandler {
         lore.add(NbtString.of(textToJson(textOf(amount + " point" + (amount == 1 ? "" : "s")))));
 
         // Set lore
-        itemStack.getOrCreateSubNbt("display").put("Lore", lore);
+        itemStack.getOrCreateSubTag("display").put("Lore", lore);
 
         // Give the player the item (or drop it on the ground if they don't have inventory space)
         thePlayer.getInventory().offerOrDrop(itemStack);
